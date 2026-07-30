@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>玄机阁 · 界面 redesign 预览</title>
+<style>
+/* ===== 新设计系统（预览用，内联自包含） ===== */
+:root{
+  --ink-0:#0e0c09; --ink-1:#16120d; --ink-2:#1f1a13; --ink-3:#282116;
+  --gold:#dab267; --gold-soft:#edd9a6; --gold-dim:#a98a4c;
+  --cinnabar:#b5402f; --cinnabar-soft:#df7164;
+  --paper:#ece3d2; --muted:#a99e88; --line:#3a3020;
+  /* 五行功能色 */
+  --wood:#6fae8e; --fire:#c8553d; --earth:#d9b96b; --metal:#cfc6b0; --water:#6e8fb0;
+  --r:14px; --maxw:1080px;
+  --serif:"Songti SC","STSong","Noto Serif CJK SC",serif;
+  --kai:"Kaiti SC","STKaiti","Kaiti",var(--serif);
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",system-ui,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans); /* 正文无衬线：清晰易读 */
+  background:
+    radial-gradient(1000px 560px at 88% -10%,rgba(181,64,47,.12),transparent 60%),
+    radial-gradient(900px 520px at 2% 0%,rgba(210,168,87,.12),transparent 55%),
+    var(--ink-1);
+  color:var(--paper);line-height:1.7;letter-spacing:.01em;
+  -webkit-font-smoothing:antialiased;min-height:100vh;
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+h1,h2,h3,.brand b,.seal,.poem{font-family:var(--serif);font-weight:600}
+a{color:var(--gold-soft);text-decoration:none}
+
+/* —— 顶栏：玻璃化 + 吸顶 —— */
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 22px;backdrop-filter:blur(14px);background:rgba(14,12,9,.72);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px}
+.seal{display:grid;place-items:center;width:40px;height:40px;border:1.5px solid var(--cinnabar);
+  border-radius:9px;color:var(--cinnabar-soft);font-family:var(--kai);font-size:20px;flex:none;
+  box-shadow:0 0 0 3px rgba(181,64,47,.12)}
+.brand b{font-size:18px;color:var(--gold-soft);letter-spacing:.2em}
+.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:.34em;font-family:var(--sans)}
+.nav{display:flex;gap:4px}
+.nav a{padding:8px 14px;border-radius:20px;color:var(--muted);font-size:13.5px;transition:.2s;letter-spacing:.04em}
+.nav a:hover{color:var(--paper);background:rgba(210,168,87,.1)}
+.offline-pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--wood);
+  border:1px solid rgba(111,174,142,.4);border-radius:20px;padding:4px 10px}
+.offline-pill::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--wood);box-shadow:0 0 8px var(--wood)}
+
+/* —— 扉页 Hero —— */
+.hero{text-align:center;padding:72px 0 40px;position:relative}
+.medallion{width:104px;height:104px;margin:0 auto 22px;border-radius:50%;
+  background:radial-gradient(circle at 50% 30%,rgba(210,168,87,.22),transparent 70%);
+  display:grid;place-items:center;position:relative}
+.medallion::before{content:"";position:absolute;inset:0;border:1px solid var(--gold-dim);border-radius:50%;opacity:.5}
+.medallion .seal{width:64px;height:64px;font-size:32px;border-width:2px}
+.hero .kicker{color:var(--cinnabar-soft);letter-spacing:.46em;font-size:12px;font-family:var(--sans)}
+.hero h1{font-size:clamp(40px,8vw,60px);color:var(--gold-soft);letter-spacing:.16em;margin:16px 0 12px;text-shadow:0 2px 0 #000}
+.hero .edict{max-width:560px;margin:0 auto;color:var(--paper);opacity:.85;font-size:15px;line-height:1.95}
+.today{display:inline-flex;align-items:center;gap:10px;margin-top:24px;padding:9px 18px;
+  border:1px solid var(--line);border-radius:24px;background:var(--ink-2);font-size:13.5px;color:var(--muted)}
+.today b{color:var(--gold-soft);font-weight:600}
+.cta-row{display:flex;gap:12px;justify-content:center;margin-top:26px;flex-wrap:wrap}
+.btn{display:inline-block;padding:12px 28px;border-radius:26px;font-size:14px;letter-spacing:.08em;cursor:pointer;
+  transition:.2s;font-family:var(--sans);border:1px solid transparent}
+.btn-primary{background:linear-gradient(180deg,var(--cinnabar-soft),var(--cinnabar));color:#fff;border-color:transparent}
+.btn-primary:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn-ghost{border-color:var(--gold);color:var(--gold-soft);background:rgba(210,168,87,.06)}
+.btn-ghost:hover{background:rgba(210,168,87,.16)}
+.btn:focus-visible{outline:2px solid var(--gold-soft);outline-offset:3px}
+
+/* —— 快捷入口 —— */
+.quick{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 6px}
+.quick a{font-size:13px;color:var(--paper);border:1px solid var(--line);border-radius:24px;padding:8px 16px;
+  background:var(--ink-2);transition:.2s}
+.quick a:hover{border-color:var(--gold-dim);color:var(--gold-soft)}
+
+/* —— 模块宫格 —— */
+.section-title{text-align:center;color:var(--muted);letter-spacing:.34em;font-size:12px;margin:46px 0 6px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:26px 0}
+.tile{background:linear-gradient(180deg,var(--ink-2),var(--ink-3));border:1px solid var(--line);
+  border-radius:var(--r);padding:22px 20px;transition:.22s;position:relative;overflow:hidden;display:block}
+.tile::after{content:"";position:absolute;left:0;top:0;width:3px;height:100%;background:var(--gold-dim);opacity:0;transition:.22s}
+.tile:hover{transform:translateY(-4px);border-color:var(--gold-dim);box-shadow:0 14px 36px rgba(0,0,0,.45)}
+.tile:hover::after{opacity:1}
+.tile .ic{font-size:28px;margin-bottom:12px;display:block}
+.tile h3{font-size:18px;color:var(--gold-soft);letter-spacing:.05em;margin-bottom:6px}
+.tile p{font-size:13px;color:var(--muted);line-height:1.75}
+.tag{position:absolute;top:16px;right:16px;font-size:10.5px;color:var(--muted);border:1px solid var(--line);
+  border-radius:10px;padding:2px 8px;letter-spacing:.05em}
+.tag.hot{color:var(--cinnabar-soft);border-color:rgba(181,64,47,.5)}
+.tag.core{color:var(--gold-soft);border-color:rgba(210,168,87,.5)}
+
+/* —— 结果区统一卡片语言（示例：黄历/八字）—— */
+.sample{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}
+.card{background:linear-gradient(180deg,var(--ink-2),var(--ink-3));border:1px solid var(--line);
+  border-radius:var(--r);padding:20px}
+.card h3{font-size:17px;color:var(--gold);letter-spacing:.08em;margin-bottom:14px;border-bottom:1px solid var(--line);padding-bottom:10px}
+.elem{display:inline-flex;align-items:center;gap:6px;font-size:12px;border-radius:14px;padding:3px 11px;margin:3px 4px 3px 0;border:1px solid var(--line)}
+.elem .dot{width:8px;height:8px;border-radius:50%}
+.wood{color:var(--wood);border-color:rgba(111,174,142,.22)} .wood .dot{background:var(--wood)}
+.fire{color:var(--fire);border-color:rgba(200,85,61,.22)} .fire .dot{background:var(--fire)}
+.earth{color:var(--earth);border-color:rgba(217,185,107,.22)} .earth .dot{background:var(--earth)}
+.metal{color:var(--metal);border-color:rgba(207,198,176,.22)} .metal .dot{background:var(--metal)}
+.water{color:var(--water);border-color:rgba(110,143,176,.22)} .water .dot{background:var(--water)}
+.kv{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.kv:last-child{border-bottom:0}
+.kv .k{color:var(--muted)} .kv .v{color:var(--paper)}
+.poem{font-family:var(--kai);font-size:17px;color:var(--paper);line-height:2;letter-spacing:.06em;white-space:pre-line}
+
+/* —— 道诀 / 声明 / 页脚 —— */
+.verse{border-left:3px solid var(--cinnabar);padding:8px 0 8px 16px;color:var(--paper);font-size:14.5px;
+  margin:14px 0;font-family:var(--kai)}
+.verse .src{display:block;color:var(--muted);font-size:12px;margin-top:4px;font-family:var(--sans)}
+.disclaimer{margin-top:36px;padding:18px 20px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:12.5px;line-height:1.9;text-align:center}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:28px;letter-spacing:.12em;padding-bottom:40px}
+
+/* —— 移动端底部标签栏（习惯：App 式导航）—— */
+.bottombar{display:none}
+@media(max-width:720px){
+  .nav{display:none}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .sample{grid-template-columns:1fr}
+  .bottombar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:space-around;
+    background:rgba(14,12,9,.92);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:8px 4px;
+    padding-bottom:calc(8px + env(safe-area-inset-bottom))}
+  .bottombar a{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-size:11px;flex:1}
+  .bottombar a .bi{font-size:18px}
+  .bottombar a:hover{color:var(--gold-soft)}
+  body{padding-bottom:64px}
+}
+@media(max-width:460px){.grid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion: no-preference){
+  @keyframes xj-rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .rise{animation:xj-rise .6s ease both}
+}
+a:focus-visible,.btn:focus-visible{outline:2px solid var(--gold-soft);outline-offset:3px}
+.banner-note{text-align:center;color:var(--muted);font-size:12px;margin:30px 0 0;letter-spacing:.04em}
+</style>
+</head>
+<body>
+
+<!-- 顶栏 -->
+<div class="topbar">
+  <div class="brand">
+    <span class="seal">玄</span>
+    <div><b>玄机阁</b><small>XUAN JI GE</small></div>
+  </div>
+  <nav class="nav">
+    <a href="#">灵签</a><a href="#">黄历</a><a href="#">八字</a>
+    <a href="#">紫微</a><a href="#">合婚</a><a href="#">姓名学</a>
+  </nav>
+  <span class="offline-pill">离线可用</span>
+</div>
+
+<div class="wrap">
+  <!-- Hero -->
+  <header class="hero rise">
+    <div class="medallion"><span class="seal">玄</span></div>
+    <div class="kicker">纯 本 地 · 零 依 赖 · 零 A I</div>
+    <h1>玄机阁</h1>
+    <p class="edict">欲知前路，先静其心。输入生辰，星盘自现；所言皆象，所断惟诚。</p>
+    <div class="today">今日：<b>2026-07-30</b> 农历 <b>丙午年六月十七</b> · <b>戊寅</b>日</div>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#">开始占算</a>
+      <a class="btn btn-ghost" href="#">查看今日宜忌</a>
+    </div>
+    <div class="quick">
+      <a href="#">🏮 抽一签</a><a href="#">📜 今日宜忌</a><a href="#">☯ 排八字</a><a href="#">𖤐 测姓名</a>
+    </div>
+  </header>
+
+  <!-- 模块宫格 -->
+  <div class="section-title">— 阁 中 所 藏 —</div>
+  <div class="grid">
+    <a class="tile" href="#"><span class="tag hot">首批</span><span class="ic">🏮</span>
+      <h3>灵签抽签</h3><p>心诚则灵，一签问事。本地随机，签诗解曰，给象不给令。</p></a>
+    <a class="tile" href="#"><span class="tag hot">首批</span><span class="ic">📜</span>
+      <h3>黄历宜忌</h3><p>农历干支、节气建除、每日宜忌冲煞，兼简易择日。</p></a>
+    <a class="tile" href="#"><span class="tag core">核心</span><span class="ic">☯</span>
+      <h3>八字排盘</h3><p>四柱五行、十神大运，本机推算，不假外求。</p></a>
+    <a class="tile" href="#"><span class="tag core">核心</span><span class="ic">🌌</span>
+      <h3>紫微斗数</h3><p>命宫起寅，十四主星飞四化，十二宫星曜自现。</p></a>
+    <a class="tile" href="#"><span class="tag">进阶</span><span class="ic">💞</span>
+      <h3>八字合婚</h3><p>两造八字合参，生肖纳音日柱五行十神，五项合象。</p></a>
+    <a class="tile" href="#"><span class="tag">进阶</span><span class="ic">𖤐</span>
+      <h3>姓名学</h3><p>五格剖象、三才五行、八十一数吉凶，康熙笔画本机演算。</p></a>
+  </div>
+
+  <!-- 结果区统一卡片语言示例 -->
+  <div class="section-title">— 结 果 呈 现 示 例 —</div>
+  <div class="sample">
+    <div class="card">
+      <h3>今日黄历 · 丙午年六月十七</h3>
+      <div class="kv"><span class="k">干支日</span><span class="v">戊寅日</span></div>
+      <div class="kv"><span class="k">冲煞</span><span class="v">冲猴 · 煞北</span></div>
+      <div class="kv"><span class="k">十二建除</span><span class="v">开日</span></div>
+      <div style="margin-top:12px">
+        <span class="elem wood"><span class="dot"></span>宜 · 祭祀</span>
+        <span class="elem fire"><span class="dot"></span>宜 · 开市</span>
+        <span class="elem earth"><span class="dot"></span>忌 · 动土</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>八字五行 · 日主强弱</h3>
+      <div class="kv"><span class="k">日主</span><span class="v">戊土</span></div>
+      <div class="kv"><span class="k">强弱</span><span class="v">身弱</span></div>
+      <div class="kv"><span class="k">喜用神</span><span class="v">火 · 土</span></div>
+      <div style="margin-top:12px">
+        <span class="elem fire"><span class="dot"></span>喜 · 火</span>
+        <span class="elem earth"><span class="dot"></span>喜 · 土</span>
+        <span class="elem water"><span class="dot"></span>忌 · 水</span>
+        <span class="elem wood"><span class="dot"></span>忌 · 木</span>
+      </div>
+      <p class="poem" style="margin-top:14px">五行需补火土气，\n姓名用字宜温厚。</p>
+    </div>
+  </div>
+
+  <div class="verse">「此阁诸法，皆在本机演算；生辰不出寸屏，笔墨惟出道诀。仅供观照，不作凭据。」<span class="src">— 阁训</span></div>
+
+  <div class="disclaimer">
+    免责声明：玄机阁所有内容均为中华传统历法与命理文化的<strong>娱乐体验与自我观照</strong>之用，
+    不构成任何医疗、心理或决策建议。本阁纯本地运行，生辰信息不出本机；推算结果仅供文化参考，请理性看待。
+  </div>
+
+  <div class="banner-note">↑ 以上为界面 redesign 高保真预览（非最终站点）。移动端可见底部标签栏。</div>
+  <footer>玄机阁 · 纯本地算命站 · 双击即离线运行</footer>
+</div>
+
+<!-- 移动端底部标签栏 -->
+<nav class="bottombar">
+  <a href="#"><span class="bi">🏮</span>灵签</a>
+  <a href="#"><span class="bi">📜</span>黄历</a>
+  <a href="#"><span class="bi">☯</span>八字</a>
+  <a href="#"><span class="bi">🌌</span>紫微</a>
+  <a href="#"><span class="bi">𖤐</span>姓名</a>
+</nav>
+
+</body>
+</html>

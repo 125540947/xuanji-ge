@@ -6,9 +6,9 @@
   --ink:#14110d;          /* 背景 近墨微暖 */
   --ink-2:#1c1812;        /* 面板 */
   --ink-3:#241e16;        /* 面板深 */
-  --gold:#c9a86a;         /* 沉金 */
-  --gold-soft:#e3c98f;    /* 沉金亮 */
-  --gold-dim:#8c754a;     /* 沉金暗 */
+  --gold:#dab267;         /* 温润金 */
+  --gold-soft:#edd9a6;    /* 温润金亮 */
+  --gold-dim:#a98a4c;     /* 温润金暗 */
   --cinnabar:#b5402f;     /* 朱砂 */
   --cinnabar-soft:#d9685a;/* 朱砂亮 */
   --paper:#e9e1d2;        /* 宣纸正文 */
@@ -18,6 +18,12 @@
   --kai:"Kaiti SC","STKaiti","Kaiti","SimKai",var(--serif);
   --radius:10px;
   --maxw:920px;
+  /* —— UI Redesign：五行功能色（命理工具可用性升级）—— */
+  --wx-mu:#3f9b8c;   /* 木 青 */
+  --wx-huo:#c0392b;  /* 火 红 */
+  --wx-tu:#caa030;   /* 土 黄 */
+  --wx-jin:#b8b8b8;  /* 金 白 */
+  --wx-shui:#2f6fb0; /* 水 蓝 */
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
@@ -40,7 +46,11 @@ img{max-width:100%}
 
 /* —— 顶栏 —— */
 .topbar{display:flex;align-items:center;justify-content:space-between;
-  padding:18px 0;border-bottom:1px solid var(--line)}
+  padding:18px 0;border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:50;
+  background:rgba(20,17,13,.72);
+  backdrop-filter:saturate(140%) blur(10px);
+  -webkit-backdrop-filter:saturate(140%) blur(10px)}
 .brand{display:flex;align-items:center;gap:12px}
 .brand .seal{display:inline-grid;place-items:center;width:38px;height:38px;
   border:1px solid var(--cinnabar);border-radius:7px;color:var(--cinnabar);
@@ -98,6 +108,9 @@ input[type=date],input[type=text],input[type=number],select{
   color:var(--paper);font-family:var(--serif);font-size:14px;padding:10px 12px;outline:none}
 input:focus,select:focus{border-color:var(--gold-dim)}
 .row{display:flex;gap:12px;flex-wrap:wrap}
+
+/* UI Redesign：字体分层（正文无衬线，长文/表单可读性升级） */
+.ui-sans{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
 .row > div{flex:1;min-width:120px}
 
 /* —— 八字排盘表 —— */
@@ -110,6 +123,21 @@ input:focus,select:focus{border-color:var(--gold-dim)}
 .wuxing-bar{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
 .wuxing-bar span{font-size:12px;border:1px solid var(--line);border-radius:14px;padding:2px 10px;color:var(--gold-soft)}
 .note{color:var(--muted);font-size:12.5px;line-height:1.8}
+
+/* —— UI Redesign：五行五色功能标签（喜用/忌神一眼可辨）—— */
+.wx-tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;
+  border-radius:14px;padding:3px 10px;border:1px solid var(--line);font-weight:600;line-height:1.6}
+.wx-tag .dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.wx-tag.mu{color:var(--wx-mu);border-color:rgba(63,155,140,.22)}
+.wx-tag.mu .dot{background:var(--wx-mu)}
+.wx-tag.huo{color:var(--wx-huo);border-color:rgba(192,57,43,.22)}
+.wx-tag.huo .dot{background:var(--wx-huo)}
+.wx-tag.tu{color:var(--wx-tu);border-color:rgba(202,160,48,.22)}
+.wx-tag.tu .dot{background:var(--wx-tu)}
+.wx-tag.jin{color:var(--wx-jin);border-color:rgba(184,184,184,.22)}
+.wx-tag.jin .dot{background:var(--wx-jin)}
+.wx-tag.shui{color:var(--wx-shui);border-color:rgba(47,111,176,.22)}
+.wx-tag.shui .dot{background:var(--wx-shui)}
 
 /* —— 灵签 —— */
 .qian-stage{text-align:center;padding:18px 0}
@@ -196,6 +224,29 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin-top:28px;lette
 .daxian .dx{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--ink-2);font-size:13px}
 .daxian .dx b{color:var(--gold-soft)}
 .ziwei-hl{margin-top:6px;color:var(--gold-soft);font-family:var(--kai);font-size:15px}
+
+/* —— UI Redesign：首屏快捷入口 + 移动端底部标签栏 —— */
+.quick-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:18px 0 6px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border:1px solid var(--line);
+  border-radius:24px;color:var(--gold-soft);font-size:14px;letter-spacing:.04em;
+  background:rgba(201,168,106,.06);transition:.2s;cursor:pointer}
+.chip:hover{background:rgba(201,168,106,.16);transform:translateY(-2px);box-shadow:var(--shadow-md,0 10px 30px rgba(0,0,0,.4))}
+.chip:focus-visible{outline:2px solid var(--gold-soft);outline-offset:2px}
+.tabbar{display:none}
+@media(max-width:720px){
+  .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;
+    justify-content:space-around;align-items:center;
+    padding:8px 0 calc(8px + env(safe-area-inset-bottom));
+    background:rgba(20,17,13,.92);
+    backdrop-filter:saturate(140%) blur(10px);
+    -webkit-backdrop-filter:saturate(140%) blur(10px);
+    border-top:1px solid var(--line)}
+  .tabbar a{display:flex;flex-direction:column;align-items:center;gap:3px;
+    color:var(--muted);font-size:11px;text-decoration:none;min-width:56px}
+  .tabbar a .ic{font-size:20px;line-height:1}
+  .tabbar a:hover,.tabbar a.active{color:var(--gold-soft)}
+  .tabbar a.active .ic{color:var(--cinnabar-soft)}
+}
 @media(max-width:720px){.palace-grid{grid-template-columns:repeat(2,1fr)}}
 
 /* —— 无障碍：跳过导航 + 焦点可见（键盘 / 读屏友好）—— */
@@ -223,9 +274,9 @@ button:focus-visible,textarea:focus-visible{outline:2px solid var(--gold-soft);
 @media(max-width:720px){
   .grid{grid-template-columns:repeat(2,1fr)}
   .hl-grid{grid-template-columns:1fr}
-  /* 移动端保留导航（不再整条隐藏），改为换行可点 */
+  /* 移动端导航移至底部标签栏承载 */
   .topbar{flex-wrap:wrap;gap:8px}
-  .nav{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;width:100%}
+  .nav{display:none}
   .nav a{margin-left:0}
   /* 合婚双方与结果在窄屏堆叠，避免挤压 */
   .couple{grid-template-columns:1fr}
