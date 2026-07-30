@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var wx = '<div class="wuxing-bar">';
     ['木', '火', '土', '金', '水'].forEach(function (w) {
-      wx += '<span>' + w + ' ' + r.wx[w] + '</span>';
+      wx += '<span class="' + ({'木':'mu','火':'huo','土':'tu','金':'jin','水':'shui'}[w]) + '">' + w + ' ' + r.wx[w] + '</span>';
     });
     wx += '</div>';
 
@@ -126,5 +126,13 @@ document.addEventListener('DOMContentLoaded', function () {
 })();
 });
 </script>
+<nav class="bottom-tab">
+  <a href="../index.html">🏠<span>首页</span></a>
+  <a class="active" href="bazi.html">☯<span>八字</span></a>
+  <a href="ziwei.html">🌌<span>紫微</span></a>
+  <a href="nameology.html">✍<span>姓名</span></a>
+  <a href="huangli.html">📅<span>黄历</span></a>
+  <a href="hehun.html">💞<span>合婚</span></a>
+</nav>
 </body>
 </html>

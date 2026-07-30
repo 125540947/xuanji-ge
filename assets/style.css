@@ -316,3 +316,26 @@ button:focus-visible,textarea:focus-visible{outline:2px solid var(--gold-soft);
 .name-alt-note .btn{margin-left:8px;padding:3px 10px;font-size:12px;vertical-align:middle}
 .name-bazi{margin-top:18px;padding:14px;border:1px solid rgba(202,164,90,.3);border-radius:8px;background:rgba(202,164,90,.05)}
 .name-bazi h3{font-size:15px;margin:0 0 8px;color:var(--gold-soft)}
+
+/* 移动端底部标签栏（与首页统一导航） */
+.bottom-tab{display:none}
+@media(max-width:720px){
+  .bottom-tab{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:100;
+    justify-content:space-around;
+    background:rgba(20,17,13,.92);
+    backdrop-filter:saturate(140%) blur(10px);
+    -webkit-backdrop-filter:saturate(140%) blur(10px);
+    border-top:1px solid var(--line);
+    padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+  .bottom-tab a{display:flex;flex-direction:column;align-items:center;gap:2px;
+    min-width:44px;padding:4px 2px;color:var(--muted);text-decoration:none;font-size:11px}
+  .bottom-tab a:hover,.bottom-tab a:focus-visible{color:var(--gold-soft)}
+  .bottom-tab a.active{color:var(--gold-soft)}
+  body{padding-bottom:54px}
+}
+/* 五行分布条染色（呼应首页五色标签） */
+.wuxing-bar span.mu{color:var(--wx-mu);border-color:rgba(63,155,140,.4)}
+.wuxing-bar span.huo{color:var(--wx-huo);border-color:rgba(192,57,43,.4)}
+.wuxing-bar span.tu{color:var(--wx-tu);border-color:rgba(202,160,48,.4)}
+.wuxing-bar span.jin{color:var(--wx-jin);border-color:rgba(184,184,184,.4)}
+.wuxing-bar span.shui{color:var(--wx-shui);border-color:rgba(47,111,176,.4)}
