@@ -1,0 +1,267 @@
+/* 玄机阁 · 设计系统 style.css
+   沉金 / 朱砂 · 系统衬线 · 手写动效 · 尊重 prefers-reduced-motion
+   零外部依赖：不引任何字体 / 库 / CDN */
+
+:root{
+  --ink:#14110d;          /* 背景 近墨微暖 */
+  --ink-2:#1c1812;        /* 面板 */
+  --ink-3:#241e16;        /* 面板深 */
+  --gold:#c9a86a;         /* 沉金 */
+  --gold-soft:#e3c98f;    /* 沉金亮 */
+  --gold-dim:#8c754a;     /* 沉金暗 */
+  --cinnabar:#b5402f;     /* 朱砂 */
+  --cinnabar-soft:#d9685a;/* 朱砂亮 */
+  --paper:#e9e1d2;        /* 宣纸正文 */
+  --muted:#9c927e;        /* 次要 */
+  --line:#3a3122;         /* 细线 */
+  --serif:"Songti SC","STSong","SimSun","Noto Serif CJK SC","Source Han Serif SC",serif;
+  --kai:"Kaiti SC","STKaiti","Kaiti","SimKai",var(--serif);
+  --radius:10px;
+  --maxw:920px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  font-family:var(--serif);
+  background:
+    radial-gradient(900px 500px at 85% -8%,rgba(181,64,47,.10),transparent 60%),
+    radial-gradient(800px 480px at 4% 2%,rgba(201,168,106,.10),transparent 55%),
+    var(--ink);
+  color:var(--paper);
+  line-height:1.85;
+  letter-spacing:.02em;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+a{color:var(--gold-soft);text-decoration:none}
+img{max-width:100%}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+
+/* —— 顶栏 —— */
+.topbar{display:flex;align-items:center;justify-content:space-between;
+  padding:18px 0;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .seal{display:inline-grid;place-items:center;width:38px;height:38px;
+  border:1px solid var(--cinnabar);border-radius:7px;color:var(--cinnabar);
+  font-family:var(--kai);font-size:18px;letter-spacing:0;flex:none}
+.brand b{font-size:18px;color:var(--gold-soft);letter-spacing:.18em;font-weight:600}
+.brand small{display:block;color:var(--muted);font-size:11px;letter-spacing:.3em}
+.nav a{color:var(--muted);font-size:13px;margin-left:18px;letter-spacing:.05em;transition:.2s}
+.nav a:hover{color:var(--gold-soft)}
+
+/* —— 扉页 / Hero —— */
+.hero{text-align:center;padding:64px 0 44px;position:relative}
+.hero:before,.hero:after{content:"✦";color:var(--gold-dim);font-size:13px;position:absolute;top:34px}
+.hero:before{left:6px}.hero:after{right:6px}
+.hero .kicker{color:var(--cinnabar-soft);letter-spacing:.4em;font-size:12px}
+.hero h1{font-size:clamp(34px,7vw,52px);color:var(--gold-soft);letter-spacing:.14em;
+  margin:18px 0 10px;text-shadow:0 1px 0 #000;font-weight:600}
+.hero .edict{max-width:600px;margin:14px auto 0;color:var(--paper);opacity:.9;font-size:15.5px}
+.hero .today{margin-top:22px;color:var(--muted);font-size:13px}
+.hero .today b{color:var(--gold-soft);font-weight:400}
+
+/* —— 按钮（印章风）—— */
+.btn{display:inline-block;border:1px solid var(--cinnabar);color:var(--cinnabar-soft);
+  background:rgba(181,64,47,.06);padding:11px 26px;border-radius:24px;font-size:14px;
+  letter-spacing:.1em;cursor:pointer;transition:.2s;font-family:var(--serif)}
+.btn:hover{background:rgba(181,64,47,.16);color:var(--paper)}
+.btn.gold{border-color:var(--gold);color:var(--gold-soft);background:rgba(201,168,106,.06)}
+.btn.gold:hover{background:rgba(201,168,106,.16)}
+.btn:focus-visible{outline:2px solid var(--gold-soft);outline-offset:2px}
+
+/* —— 模块宫格 —— */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:30px 0}
+.tile{background:linear-gradient(180deg,var(--ink-2),var(--ink-3));
+  border:1px solid var(--line);border-radius:var(--radius);padding:20px 18px;
+  display:block;transition:.22s;position:relative;overflow:hidden}
+.tile:hover{transform:translateY(-3px);border-color:var(--gold-dim);
+  box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.tile .ic{font-size:26px;color:var(--gold);margin-bottom:10px}
+.tile h3{font-size:17px;color:var(--gold-soft);letter-spacing:.06em;margin-bottom:6px;font-weight:600}
+.tile p{font-size:12.5px;color:var(--muted);line-height:1.7}
+.tile .tag{position:absolute;top:14px;right:14px;font-size:10px;color:var(--muted);
+  border:1px solid var(--line);border-radius:10px;padding:1px 7px;letter-spacing:.05em}
+.tile .tag.hot{color:var(--cinnabar-soft);border-color:rgba(181,64,47,.5)}
+
+/* —— 通用面板 / 卡片 —— */
+.panel{background:linear-gradient(180deg,var(--ink-2),var(--ink-3));
+  border:1px solid var(--line);border-radius:var(--radius);padding:24px;margin:22px 0}
+.panel h2{font-size:21px;color:var(--gold);letter-spacing:.08em;border-bottom:1px solid var(--line);
+  padding-bottom:12px;margin-bottom:16px;font-weight:600}
+.section-title{text-align:center;color:var(--muted);letter-spacing:.3em;font-size:13px;margin:40px 0 4px}
+
+/* —— 表单控件 —— */
+label{display:block;color:var(--muted);font-size:13px;margin:14px 0 6px;letter-spacing:.05em}
+input[type=date],input[type=text],input[type=number],select{
+  width:100%;background:var(--ink);border:1px solid var(--line);border-radius:8px;
+  color:var(--paper);font-family:var(--serif);font-size:14px;padding:10px 12px;outline:none}
+input:focus,select:focus{border-color:var(--gold-dim)}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.row > div{flex:1;min-width:120px}
+
+/* —— 八字排盘表 —— */
+.bazi-table{width:100%;border-collapse:collapse;margin:8px 0;font-size:13.5px}
+.bazi-table th,.bazi-table td{border:1px solid var(--line);padding:10px 8px;text-align:center;vertical-align:middle}
+.bazi-table th{color:var(--gold);background:var(--ink-3);font-weight:600;letter-spacing:.05em}
+.bazi-table .pillar-zi{font-size:22px;color:var(--gold-soft);line-height:1.3}
+.bazi-table .pillar-gan{font-size:22px;color:var(--paper);line-height:1.3}
+.bazi-table .lbl{color:var(--muted);font-size:12px}
+.wuxing-bar{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.wuxing-bar span{font-size:12px;border:1px solid var(--line);border-radius:14px;padding:2px 10px;color:var(--gold-soft)}
+.note{color:var(--muted);font-size:12.5px;line-height:1.8}
+
+/* —— 灵签 —— */
+.qian-stage{text-align:center;padding:18px 0}
+.qian-tube{width:84px;height:120px;margin:0 auto 18px;border:1px solid var(--gold-dim);
+  border-radius:10px 10px 6px 6px;background:linear-gradient(180deg,var(--ink-3),var(--ink));
+  position:relative;overflow:hidden}
+.qian-tube:before{content:"";position:absolute;inset:6px 10px;border:1px solid rgba(201,168,106,.25);border-radius:6px}
+.qian-glyph{position:absolute;inset:0;display:grid;place-items:center;color:var(--gold-dim);font-size:30px}
+.qian-result{max-width:560px;margin:0 auto}
+.qian-no{font-family:var(--kai);font-size:30px;color:var(--cinnabar-soft);letter-spacing:.1em}
+.qian-level{display:inline-block;font-size:12px;color:var(--gold-soft);border:1px solid var(--line);
+  border-radius:12px;padding:2px 12px;margin:8px 0 14px}
+.qian-poem{font-family:var(--kai);font-size:18px;color:var(--paper);line-height:2.1;
+  letter-spacing:.08em;white-space:pre-line}
+.qian-jie{color:var(--muted);font-size:14px;margin-top:14px;line-height:1.9}
+.qian-edict{color:var(--gold-soft);font-size:14px;margin-top:14px;font-family:var(--kai);letter-spacing:.05em}
+
+/* —— 黄历 —— */
+.hl-head{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center}
+.hl-date{font-family:var(--kai);font-size:30px;color:var(--gold-soft);line-height:1.3}
+.hl-sub{color:var(--muted);font-size:13px;line-height:1.9}
+.hl-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.hl-box{background:var(--ink);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.hl-box h4{color:var(--cinnabar-soft);font-size:13px;letter-spacing:.1em;margin-bottom:8px;font-weight:600}
+.hl-box .yi,.hl-box .ji{font-size:14px;line-height:2;color:var(--paper)}
+.hl-box .ji{color:var(--muted)}
+.zx-form{margin-top:18px}
+.zx-out{margin-top:14px;font-size:15px;line-height:1.9}
+.zx-out .good{color:var(--gold-soft)}
+.zx-out .bad{color:var(--cinnabar-soft)}
+.zx-out .flat{color:var(--muted)}
+
+/* —— 道诀体引言 —— */
+.verse{border-left:3px solid var(--cinnabar);padding:8px 0 8px 16px;color:var(--paper);
+  font-size:15px;margin:12px 0;font-family:var(--kai);letter-spacing:.04em}
+.verse .src{display:block;color:var(--muted);font-size:12px;margin-top:4px;font-family:var(--serif)}
+
+/* —— 免责声明 / 页脚 —— */
+.disclaimer{margin-top:36px;padding:18px 20px;border:1px dashed var(--line);border-radius:8px;
+  color:var(--muted);font-size:12.5px;line-height:1.9;text-align:center}
+/* —— 合婚：双方并排 —— */
+.couple{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.couple .side{border:1px solid var(--line);border-radius:10px;padding:14px}
+.couple .side h3{margin:0 0 10px;font-size:15px;color:var(--gold);letter-spacing:.1em}
+.duel{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin:8px 0 18px}
+.duel .mid{color:var(--gold-dim);font-size:22px}
+.duel-cap{color:var(--muted);font-size:13px;margin-bottom:4px}
+.duel-cap-r{text-align:right}
+.xiang-box{text-align:center;margin:6px 0 18px;padding:18px;border:1px solid var(--gold-dim);border-radius:12px;
+  background:linear-gradient(180deg,rgba(201,168,106,.07),transparent)}
+.xiang-box .x{font-size:30px;letter-spacing:.3em;color:var(--gold);margin-bottom:8px}
+.xiang-box .poem{white-space:pre-line;color:var(--ink-2);line-height:1.9;font-size:15px}
+.he-dim{margin:10px 0;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.he-dim .dh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.he-dim .dh b{color:var(--gold);font-size:14px;letter-spacing:.08em}
+.he-dim .lvl{font-size:12px;color:var(--muted)}
+.he-dim .rel{font-size:12px;color:var(--gold-dim);margin-bottom:4px}
+.he-dim .meta{font-size:12px;color:var(--muted);margin-bottom:4px}
+.he-dim .tx{font-size:13px;color:var(--ink-2);line-height:1.7}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:28px;letter-spacing:.12em;padding-bottom:30px}
+
+/* —— 紫微斗数：十二宫盘 —— */
+.palace-wrap{margin-top:18px}
+.palace-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.palace{border:1px solid var(--line);border-radius:8px;padding:10px 11px;background:var(--ink-2);
+  min-height:96px;display:flex;flex-direction:column;gap:5px;position:relative}
+.palace.ming{border-color:var(--gold);box-shadow:0 0 0 1px rgba(201,168,106,.35) inset}
+.palace .pname{font-family:var(--kai);font-size:14px;color:var(--gold-soft);letter-spacing:.06em}
+.palace .pzhi{position:absolute;top:8px;right:10px;font-size:12px;color:var(--muted)}
+.palace .stars{display:flex;flex-wrap:wrap;gap:4px 7px;align-content:flex-start}
+.pstar-main{font-family:var(--serif);font-size:15px;color:var(--paper);font-weight:600}
+.palace.ming .pstar-main{color:var(--gold-soft)}
+.pstar-aux{font-size:11.5px;color:var(--muted)}
+.pstar-aux.qi{color:var(--cinnabar-soft)}
+.pstar-aux.good{color:var(--gold-dim)}
+.hua-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto}
+.hua-tag{font-size:10.5px;padding:1px 6px;border-radius:20px;border:1px solid var(--line);color:var(--gold-dim)}
+.hua-tag.l{color:var(--cinnabar-soft);border-color:rgba(181,64,47,.4)}
+.hua-tag.k{color:var(--gold-soft);border-color:rgba(201,168,106,.4)}
+.four-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.four-list .fi{border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:var(--ink-2);min-width:120px}
+.four-list .fi b{color:var(--gold-soft);font-weight:600}
+.daxian{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.daxian .dx{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--ink-2);font-size:13px}
+.daxian .dx b{color:var(--gold-soft)}
+.ziwei-hl{margin-top:6px;color:var(--gold-soft);font-family:var(--kai);font-size:15px}
+@media(max-width:720px){.palace-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* —— 无障碍：跳过导航 + 焦点可见（键盘 / 读屏友好）—— */
+.skip{position:absolute;left:-9999px;top:0;background:var(--gold);color:var(--ink);
+  padding:8px 18px;border-radius:0 0 8px 0;z-index:99;letter-spacing:.12em;font-size:13px}
+.skip:focus{left:0;outline:2px solid var(--gold-soft);outline-offset:2px}
+a:focus-visible,input:focus-visible,select:focus-visible,
+button:focus-visible,textarea:focus-visible{outline:2px solid var(--gold-soft);
+  outline-offset:2px;border-radius:4px}
+:focus:not(:focus-visible){outline:none}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
+
+/* —— 动效（受 reduced-motion 保护）—— */
+@media (prefers-reduced-motion: no-preference){
+  @keyframes xj-float{50%{transform:translateY(-7px)}}
+  @keyframes xj-fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .float{animation:xj-float 5s ease-in-out infinite}
+  .reveal{animation:xj-fade .6s ease both}
+  @keyframes xj-draw{0%{transform:rotate(-8deg) translateY(-40px);opacity:0}
+    60%{opacity:1}100%{transform:rotate(0) translateY(0);opacity:1}}
+  .qian-draw{animation:xj-draw .7s cubic-bezier(.2,.7,.3,1) both}
+}
+
+/* —— 响应式 —— */
+@media(max-width:720px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .hl-grid{grid-template-columns:1fr}
+  /* 移动端保留导航（不再整条隐藏），改为换行可点 */
+  .topbar{flex-wrap:wrap;gap:8px}
+  .nav{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;width:100%}
+  .nav a{margin-left:0}
+  /* 合婚双方与结果在窄屏堆叠，避免挤压 */
+  .couple{grid-template-columns:1fr}
+  .duel{grid-template-columns:1fr;gap:10px;text-align:center}
+  .duel .mid{transform:rotate(90deg)}
+}
+@media(max-width:460px){
+  .grid{grid-template-columns:1fr}
+}
+
+/* —— 姓名学：五格表 / 三才配置 —— */
+.name-table{width:100%;border-collapse:collapse;margin:8px 0;font-size:13.5px}
+.name-table th,.name-table td{border:1px solid var(--line);padding:10px 8px;text-align:center;vertical-align:middle}
+.name-table th{color:var(--gold);background:var(--ink-3);font-weight:600;letter-spacing:.05em}
+.name-table .lbl{color:var(--muted);font-size:12px}
+.ji-good{color:var(--gold-soft);font-weight:600}
+.ji-bad{color:var(--cinnabar-soft,#b5402f);font-weight:600}
+.ji-mid{color:#d8a24a;font-weight:600}
+.name-notes{margin:6px 0 0}
+.name-notes p{color:var(--muted);font-size:12.5px;line-height:1.85;margin:7px 0}
+.name-notes b{color:var(--gold-soft);font-weight:600;margin-right:4px}
+.name-notes .src{color:var(--gold-dim);font-size:11px;margin-right:6px}
+.name-sancai{margin-top:6px;color:var(--muted);font-size:13px;letter-spacing:.06em}
+.name-sancai b{color:var(--gold-soft);font-size:16px;margin:0 5px}
+.name-summary{margin:10px 0 16px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--ink-3)}
+.name-summary{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+.name-summary span{font-size:13px;font-weight:600}
+.name-summary .verdict{width:100%;margin-top:2px}
+.name-summary .verdict{color:var(--gold-soft);font-size:13px;line-height:1.7}
+.name-alt-note{
+  margin:10px 0;padding:8px 12px;
+  border-left:3px solid var(--gold-soft,#caa45a);
+  background:rgba(202,164,90,.08);
+  font-size:13px;color:var(--muted);
+  border-radius:4px;line-height:1.7
+}
+.name-alt-note .btn{margin-left:8px;padding:3px 10px;font-size:12px;vertical-align:middle}
+.name-bazi{margin-top:18px;padding:14px;border:1px solid rgba(202,164,90,.3);border-radius:8px;background:rgba(202,164,90,.05)}
+.name-bazi h3{font-size:15px;margin:0 0 8px;color:var(--gold-soft)}

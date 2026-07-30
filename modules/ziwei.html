@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>玄机阁 · 紫微斗数</title>
+<meta name="description" content="玄机阁紫微斗数：命宫起寅、十四主星飞四化、十二宫星曜，纯本地历法内核演算，生辰不出本机。">
+<meta property="og:title" content="玄机阁 · 紫微斗数">
+<meta property="og:description" content="命宫起寅、十四主星飞四化，十二宫星曜自现。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<meta name="theme-color" content="#14110d">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">跳到主要内容</a>
+<div class="wrap" id="main">
+  <div class="topbar">
+    <div class="brand"><span class="seal">玄</span><div><b>玄机阁</b><small>紫微斗数</small></div></div>
+    <nav class="nav">
+      <a href="../index.html">总纲</a><a href="lingqian.html">灵签</a><a href="huangli.html">黄历</a>
+      <a href="bazi.html">八字</a><a href="ziwei.html">紫微</a><a href="hehun.html">合婚</a><a href="nameology.html">姓名学</a>
+    </nav>
+  </div>
+
+  <header class="hero">
+    <div class="kicker">北 斗 为 枢 · 南 斗 为 衡</div>
+    <h1>紫微斗数</h1>
+    <p class="edict">命身既定，十二宫开；紫微落处，群曜随行。四化飞布，吉凶攸分。本机推算，不假外求。</p>
+  </header>
+
+  <div class="panel">
+    <div class="row">
+      <div><label for="zy">出生年</label><input type="number" id="zy" min="1900" max="2100" value="1990"></div>
+      <div><label for="zm">月</label><input type="number" id="zm" min="1" max="12" value="6"></div>
+      <div><label for="zd">日</label><input type="number" id="zd" min="1" max="31" value="15"></div>
+      <div><label for="zh">时（0–23）</label><input type="number" id="zh" min="0" max="23" value="12"></div>
+    </div>
+    <div class="row" style="margin-top:6px">
+      <div><label for="zg">性别</label>
+        <select id="zg"><option value="男">男</option><option value="女">女</option></select>
+      </div>
+      <div style="flex:0 0 auto;display:flex;align-items:flex-end">
+        <button class="btn gold" id="calcBtn">起 盘</button>
+      </div>
+    </div>
+
+    <div id="out" aria-live="polite" style="margin-top:20px"></div>
+  </div>
+
+  <div class="verse">「紫微斗数，星盘如镜。命宫照本心，身宫映所为；宫星相参，不过示其势、显其象。祸福无门，惟人自召。」<span class="src">— 紫微阁训</span></div>
+
+  <div class="disclaimer">免责声明：紫微斗数为中华星命文化之娱乐体验与自我观照，本版为入门教学排盘（未纳火星铃星、天空华盖等杂曜，节气以近似公式论）。仅供文化参考，不作任何人生、医疗、心理决策依据。生辰信息仅在本机演算，绝不出户。</div>
+  <footer>玄机阁 · 纯本地 · 历法内核本机演算</footer>
+</div>
+
+<script defer src="../assets/config.js"></script>
+<script defer src="../assets/logger.js"></script>
+<script defer src="../assets/core.js"></script>
+<script defer src="../assets/ziwei.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (window.XJ_LOG) XJ_LOG.install();
+  (function () {
+  function el(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function palaceGrid(r) {
+    var cells = r.palaces.map(function (p) {
+      var main = [], aux = [];
+      p.stars.forEach(function (s) {
+        if (r.stars[s] && r.stars[s].main) main.push(s);
+        else if (r.stars[s]) aux.push(s);
+      });
+      var starHtml = main.map(function (s) { return '<span class="pstar-main">' + s + '</span>'; }).join('');
+      var auxHtml = aux.map(function (s) {
+        var cls = 'pstar-aux';
+        if (s === '擎羊' || s === '陀罗' || s === '火星' || s === '铃星') cls += ' qi';
+        else if (s === '左辅' || s === '右弼' || s === '文昌' || s === '文曲' ||
+                 s === '天魁' || s === '天钺' || s === '禄存') cls += ' good';
+        return '<span class="' + cls + '">' + s + '</span>';
+      }).join('');
+      var hua = p.four.map(function (h) {
+        var t = h.charAt(0);
+        var cls = 'hua-tag' + (t === '禄' ? ' l' : (t === '科' ? ' k' : ''));
+        return '<span class="' + cls + '">' + h + '</span>';
+      }).join('');
+      var mingCls = p.name === '命宫' ? ' palace ming' : '';
+      return '<div class="palace' + mingCls + '">' +
+        '<span class="pname">' + p.name + '</span>' +
+        '<span class="pzhi">' + p.zhi + '</span>' +
+        '<div class="stars">' + starHtml + auxHtml + '</div>' +
+        (hua ? '<div class="hua-tags">' + hua + '</div>' : '') +
+        '</div>';
+    }).join('');
+    return '<div class="palace-grid">' + cells + '</div>';
+  }
+
+  function fourList(r) {
+    var map = { '化禄': '禄', '化权': '权', '化科': '科', '化忌': '忌' };
+    var items = Object.keys(r.four).map(function (k) {
+      var tag = map[k];
+      return '<div class="fi"><span>' + k.replace('化', '') + '</span>　<b>' + r.four[k] + '</b>　' + tag + '</div>';
+    }).join('');
+    return '<div class="four-list">' + items + '</div>';
+  }
+
+  function daXianList(r) {
+    var items = r.daXian.map(function (d) {
+      return '<div class="dx"><b>' + d.range + '</b>　' + d.zhi + '·' + d.palace + '</div>';
+    }).join('');
+    return '<div class="daxian">' + items + '</div>';
+  }
+
+  function showErr(msg) {
+    var p = document.createElement('p');
+    p.className = 'note';
+    p.textContent = '推算出错：' + msg;
+    el('out').innerHTML = '';
+    el('out').appendChild(p);
+  }
+
+  function render() {
+    var y = +el('zy').value, m = +el('zm').value, d = +el('zd').value,
+        h = +el('zh').value, g = el('zg').value;
+    if (!y || !m || !d) return;
+    if (y < 1900 || y > 2100) { showErr('出生年仅支持 1900–2100。'); return; }
+    var r;
+    try { r = XJ_ZIWEI.compute({ year: y, month: m, day: d, hour: h, gender: g }); }
+    catch (e) { showErr(e.message); return; }
+
+    var head = '<h2 style="font-size:18px">四柱　' + r.gzYear + ' ' + r.gzMonth + ' ' + r.gzDay + ' ' + r.gzHour +
+      '</h2>' +
+      '<div class="note" style="margin-top:8px">命宫 <b>' + r.mingGong.zhi + '</b>（' + r.mingGong.gz + '）　身宫 <b>' +
+      r.shenGong.zhi + '</b>（' + r.shenGong.gz + '）　五行属 <b>' + r.bureau.name + '</b>' +
+      '<div class="ziwei-hl">紫微落 ' + r.ziweiZhi + ' 宫</div></div>';
+
+    var html = head +
+      '<div class="palace-wrap">' + palaceGrid(r) + '</div>' +
+      '<div style="margin:18px 0 4px;color:var(--muted);font-size:13px">年干四化</div>' + fourList(r) +
+      '<div style="margin:16px 0 4px;color:var(--muted);font-size:13px">大限（' + r.bureau.name +
+      '·' + esc(r.input.gender) + '）</div>' + daXianList(r) +
+      '<p class="note" style="margin-top:14px">' + r.summary + '</p>';
+    el('out').innerHTML = html;
+  }
+
+  el('calcBtn').addEventListener('click', render);
+  render();
+})();
+});
+</script>
+</body>
+</html>

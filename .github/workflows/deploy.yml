@@ -1,0 +1,37 @@
+name: Deploy to Cloudflare Workers
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # 由源码白名单重建生产构件 dist/（不提交构建产物）
+      - name: Build dist
+        run: |
+          rm -rf dist && mkdir -p dist/assets dist/modules
+          cp index.html dist/
+          cp assets/config.js assets/logger.js assets/core.js assets/bazi.js \
+             assets/ziwei.js assets/hehun.js assets/nameology.js assets/qian.js \
+             assets/kangxi-strokes.js assets/kangxi-alt.js assets/style.css dist/assets/
+          cp modules/*.html dist/modules/
+
+      # 经由 Cloudflare 官方 Action 部署 Worker（Static Assets）
+      - name: Deploy with Wrangler
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

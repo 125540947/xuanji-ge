@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>玄机阁 · 灵签抽签</title>
+<meta name="description" content="玄机阁灵签抽签：内嵌签诗、本地随机，抽签解曰，给象不给令，纯本地零外链。">
+<meta property="og:title" content="玄机阁 · 灵签抽签">
+<meta property="og:description" content="心诚则灵，一签问事，给象不给令。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<meta name="theme-color" content="#14110d">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">跳到主要内容</a>
+<div class="wrap" id="main">
+  <div class="topbar">
+    <div class="brand"><span class="seal">玄</span><div><b>玄机阁</b><small>灵签抽签</small></div></div>
+    <nav class="nav">
+      <a href="../index.html">总纲</a><a href="lingqian.html">灵签</a><a href="huangli.html">黄历</a>
+      <a href="bazi.html">八字</a><a href="ziwei.html">紫微</a><a href="hehun.html">合婚</a><a href="nameology.html">姓名学</a>
+    </nav>
+  </div>
+
+  <header class="hero">
+    <div class="kicker">心 诚 则 灵</div>
+    <h1>灵签抽签</h1>
+    <p class="edict">焚香默念所问之事，心静则签至。一签问一事，给象不给令。</p>
+  </header>
+
+  <div class="panel">
+    <div class="qian-stage">
+      <div class="qian-tube" id="tube"><span class="qian-glyph">籤</span></div>
+      <button class="btn gold" id="drawBtn">求 签</button>
+    </div>
+    <div class="qian-result" id="result" aria-live="polite" style="display:none">
+      <div class="qian-no" id="qNo"></div>
+      <div class="qian-level" id="qLevel"></div>
+      <div class="qian-poem" id="qPoem"></div>
+      <div class="qian-jie" id="qJie"></div>
+      <div class="qian-edict" id="qEdict"></div>
+    </div>
+  </div>
+
+  <div class="verse">「此签所言，皆象也，非令也。观其象，反诸身，吉凶在己，不在签。」<span class="src">— 灵签阁训</span></div>
+
+  <div class="disclaimer">免责声明：灵签为中华民俗文化之娱乐体验，签诗解曰仅供观照，不作任何决策依据。</div>
+  <footer>玄机阁 · 纯本地 · 生辰不出本机</footer>
+</div>
+
+<script defer src="../assets/config.js"></script>
+<script defer src="../assets/logger.js"></script>
+<script defer src="../assets/qian.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (window.XJ_LOG) XJ_LOG.install();
+  (function () {
+  var btn = document.getElementById('drawBtn');
+  var result = document.getElementById('result');
+  var tube = document.getElementById('tube');
+  function draw() {
+    var q = XJ_QIAN.draw();
+    document.getElementById('qNo').textContent = '第 ' + q.no + ' 签 · ' + q.title;
+    document.getElementById('qLevel').textContent = q.level;
+    document.getElementById('qPoem').textContent = q.poem;
+    document.getElementById('qJie').textContent = '【解曰】' + q.jie;
+    document.getElementById('qEdict').textContent = '【签诀】' + q.edict;
+    result.style.display = 'block';
+    // 抽签动画（尊重 reduced-motion：直接显示）
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce) {
+      tube.classList.remove('qian-draw'); void tube.offsetWidth; tube.classList.add('qian-draw');
+    }
+    result.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' });
+  }
+  btn.addEventListener('click', draw);
+})();
+});
+</script>
+</body>
+</html>

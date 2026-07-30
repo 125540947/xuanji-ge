@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>玄机阁 · 八字合婚</title>
+<meta name="description" content="玄机阁八字合婚：两造八字合参，生肖纳音日柱五行十神五项合象，纯本地演算，生辰不出本机。">
+<meta property="og:title" content="玄机阁 · 八字合婚">
+<meta property="og:description" content="两造八字合参，生肖纳音日柱五行十神，五项合象。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<meta name="theme-color" content="#14110d">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">跳到主要内容</a>
+<div class="wrap" id="main">
+  <div class="topbar">
+    <div class="brand"><span class="seal">玄</span><div><b>玄机阁</b><small>八字合婚</small></div></div>
+    <nav class="nav">
+      <a href="../index.html">总纲</a><a href="lingqian.html">灵签</a><a href="huangli.html">黄历</a>
+      <a href="bazi.html">八字</a><a href="ziwei.html">紫微</a><a href="hehun.html">合婚</a><a href="nameology.html">姓名学</a>
+    </nav>
+  </div>
+
+  <header class="hero">
+    <div class="kicker">两 造 · 八 字 · 合 参</div>
+    <h1>八字合婚</h1>
+    <p class="edict">一阴一阳之谓道。取二人八字，参生肖之冲合、纳音之相生、日柱之夫妻宫、五行之互补、十神之情缘，合而成象。</p>
+  </header>
+
+  <div class="panel">
+    <div class="couple">
+      <div class="side">
+        <h3>其一</h3>
+        <div class="row">
+          <div><label for="a_g">性别</label>
+            <select id="a_g"><option value="男">男</option><option value="女">女</option></select></div>
+          <div><label for="a_y">年</label><input type="number" id="a_y" min="1900" max="2100" value="1990"></div>
+          <div><label for="a_m">月</label><input type="number" id="a_m" min="1" max="12" value="6"></div>
+          <div><label for="a_d">日</label><input type="number" id="a_d" min="1" max="31" value="15"></div>
+          <div><label for="a_h">时（0–23）</label><input type="number" id="a_h" min="0" max="23" value="12"></div>
+        </div>
+      </div>
+      <div class="side">
+        <h3>其二</h3>
+        <div class="row">
+          <div><label for="b_g">性别</label>
+            <select id="b_g"><option value="女">女</option><option value="男">男</option></select></div>
+          <div><label for="b_y">年</label><input type="number" id="b_y" min="1900" max="2100" value="1992"></div>
+          <div><label for="b_m">月</label><input type="number" id="b_m" min="1" max="12" value="3"></div>
+          <div><label for="b_d">日</label><input type="number" id="b_d" min="1" max="31" value="8"></div>
+          <div><label for="b_h">时（0–23）</label><input type="number" id="b_h" min="0" max="23" value="10"></div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <div style="flex:0 0 auto;display:flex;align-items:flex-end">
+        <button class="btn gold" id="calcBtn">起 合 参</button>
+      </div>
+    </div>
+    <div id="out" aria-live="polite" style="margin-top:20px"></div>
+  </div>
+
+  <div class="verse">「合婚者，合其气也，非合其命也。禀象以自省，缘成于相养；星盘所示皆象，鸳盟所系在人。」<span class="src">— 合婚阁训</span></div>
+
+  <div class="disclaimer">免责声明：八字合婚为中华命理文化之娱乐体验与自我观照，简化推演（以本气论五行、未纳藏干之全），不作任何姻缘论断、不预卜吉凶、不替人事决断。生辰信息仅在本机演算，绝不出户。</div>
+  <footer>玄机阁 · 纯本地 · 历法内核本机演算</footer>
+</div>
+
+<script defer src="../assets/config.js"></script>
+<script defer src="../assets/logger.js"></script>
+<script defer src="../assets/core.js"></script>
+<script defer src="../assets/bazi.js"></script>
+<script defer src="../assets/hehun.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (window.XJ_LOG) XJ_LOG.install();
+  (function () {
+  function el(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function ptext(r) { return r.yearGZ + ' ' + r.monthGZ + ' ' + r.dayGZ + ' ' + r.hourGZ; }
+
+  function pillarTable(r) {
+    var p = r.piller;
+    var head = '<tr><th>四柱</th><th>年</th><th>月</th><th>日（日主）</th><th>时</th></tr>';
+    var gan = '<tr><td class="lbl">天干</td>' + p.gan.map(function (g, i) {
+      return '<td class="pillar-gan' + (i === 2 ? ' qian-edict' : '') + '">' + g + '</td>';
+    }).join('') + '</tr>';
+    var tg = '<tr><td class="lbl">十神</td>' + p.tg.map(function (t) {
+      return '<td>' + (t === '日主' ? '—' : t) + '</td>';
+    }).join('') + '</tr>';
+    var zhi = '<tr><td class="lbl">地支</td>' + p.zhi.map(function (z) {
+      return '<td class="pillar-zi">' + z + '</td>';
+    }).join('') + '</tr>';
+    return '<table class="bazi-table">' + head + gan + tg + zhi + '</table>';
+  }
+
+  function dimBlock(d) {
+    return '<div class="he-dim">' +
+      '<div class="dh"><b>' + d.title + '</b><span class="lvl">象级 · ' + ['下','中下','中','中上','上'][d.level+2] + '</span></div>' +
+      (d.rel.length ? '<div class="rel">' + d.rel.join('、') + '</div>' : '') +
+      '<div class="meta">' + d.meta + '</div>' +
+      '<div class="tx">' + d.text + '</div>' +
+      '</div>';
+  }
+
+  function render() {
+    var a = { gender: el('a_g').value, year: +el('a_y').value, month: +el('a_m').value, day: +el('a_d').value, hour: +el('a_h').value };
+    var b = { gender: el('b_g').value, year: +el('b_y').value, month: +el('b_m').value, day: +el('b_d').value, hour: +el('b_h').value };
+    if (!a.year || !a.month || !a.day || !b.year || !b.month || !b.day) return;
+    if (a.year < 1900 || a.year > 2100 || b.year < 1900 || b.year > 2100) {
+      el('out').innerHTML = '<p class="note">推算出错：出生年仅支持 1900–2100。</p>';
+      return;
+    }
+    var r;
+    try { r = XJ_HEHUN.hehun(a, b); }
+    catch (e) {
+      var p = document.createElement('p');
+      p.className = 'note';
+      p.textContent = '推算出错：' + e.message;
+      el('out').innerHTML = '';
+      el('out').appendChild(p);
+      return;
+    }
+
+    var html = '';
+    html += '<div class="duel">';
+    html += '<div><div class="duel-cap">其一 · ' + r.A.animal + esc(a.gender) + '</div>' + pillarTable(r.A) + '</div>';
+    html += '<div class="mid">❤</div>';
+    html += '<div><div class="duel-cap duel-cap-r">其二 · ' + r.B.animal + esc(b.gender) + '</div>' + pillarTable(r.B) + '</div>';
+    html += '</div>';
+
+    html += '<div class="xiang-box"><div class="x">' + r.xiang + '</div><div class="poem">' + r.poem + '</div></div>';
+
+    html += '<h2 style="font-size:17px;color:var(--gold);letter-spacing:.1em;margin:6px 0 10px">五 项 合 参</h2>';
+    r.dims.forEach(function (d) { html += dimBlock(d); });
+
+    html += '<p class="note" style="margin-top:16px">' + r.disclaimer + '</p>';
+    el('out').innerHTML = html;
+  }
+
+  el('calcBtn').addEventListener('click', render);
+  render();
+})();
+});
+</script>
+</body>
+</html>

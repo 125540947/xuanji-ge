@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>玄机阁 · 黄历宜忌</title>
+<meta name="description" content="玄机阁黄历宜忌：农历干支、节气建除、每日宜忌冲煞，兼简易择日，纯本地历法内核演算。">
+<meta property="og:title" content="玄机阁 · 黄历宜忌">
+<meta property="og:description" content="农历干支、节气建除、每日宜忌冲煞，兼简易择日。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<meta name="theme-color" content="#14110d">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">跳到主要内容</a>
+<div class="wrap" id="main">
+  <div class="topbar">
+    <div class="brand"><span class="seal">玄</span><div><b>玄机阁</b><small>黄历宜忌</small></div></div>
+    <nav class="nav">
+      <a href="../index.html">总纲</a><a href="lingqian.html">灵签</a><a href="huangli.html">黄历</a>
+      <a href="bazi.html">八字</a><a href="ziwei.html">紫微</a><a href="hehun.html">合婚</a><a href="nameology.html">姓名学</a>
+    </nav>
+  </div>
+
+  <header class="hero">
+    <div class="kicker">农 历 · 干 支 · 宜 忌</div>
+    <h1>黄历宜忌</h1>
+    <p class="edict">择日之道，顺天时而动静。观今日之宜忌，行其所当行。</p>
+  </header>
+
+  <div class="panel">
+    <div class="row">
+      <div><label for="d">择日（公历）</label><input type="date" id="d"></div>
+      <div style="flex:0 0 auto;display:flex;align-items:flex-end">
+        <button class="btn" id="todayBtn">回今日</button>
+      </div>
+    </div>
+
+    <div class="hl-head" style="margin-top:18px">
+      <div class="hl-date" id="hlDate">—</div>
+      <div class="hl-sub" id="hlSub"></div>
+    </div>
+
+    <div class="hl-grid" aria-live="polite">
+      <div class="hl-box">
+        <h4>宜 · 可行</h4>
+        <div class="yi" id="yi">—</div>
+      </div>
+      <div class="hl-box">
+        <h4>忌 · 当避</h4>
+        <div class="ji" id="ji">—</div>
+      </div>
+      <div class="hl-box">
+        <h4>干支 · 建除</h4>
+        <div class="hl-sub" id="gz"></div>
+      </div>
+      <div class="hl-box">
+        <h4>冲煞</h4>
+        <div class="hl-sub" id="cs"></div>
+      </div>
+    </div>
+
+    <div class="zx-form">
+      <label for="zx">简易择日 · 选一事由，观今日宜忌</label>
+      <select id="zx">
+        <option value="嫁娶">嫁娶（婚姻）</option>
+        <option value="出行">出行（远行）</option>
+        <option value="开市">开市（开业）</option>
+        <option value="动土">动土（修造）</option>
+        <option value="安葬">安葬</option>
+        <option value="祈福">祈福</option>
+        <option value="入学">入学（进学）</option>
+        <option value="移徙">移徙（搬迁）</option>
+        <option value="签约">签约（立券）</option>
+      </select>
+      <div class="zx-out" id="zxOut" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div class="verse">「建除十二神，循环不息；宜忌者，时也，非命也。乘时而动，谓之知几。」<span class="src">— 择日阁训</span></div>
+
+  <div class="disclaimer">免责声明：黄历宜忌依建除派通书推演，为传统文化之娱乐参考，不作任何行事依据。重大事宜请遵现实与专业意见。</div>
+  <footer>玄机阁 · 纯本地 · 历法内核本机演算</footer>
+</div>
+
+<script defer src="../assets/config.js"></script>
+<script defer src="../assets/logger.js"></script>
+<script defer src="../assets/core.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (window.XJ_LOG) XJ_LOG.install();
+  (function () {
+  var dInput = document.getElementById('d');
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  var today = new Date();
+  var y = today.getFullYear(), m = today.getMonth() + 1, day = today.getDate();
+  dInput.value = y + '-' + String(m).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+
+  function readDate() {
+    var parts = dInput.value.split('-');
+    if (parts.length < 3) return null;
+    var y = +parts[0], m = +parts[1], d = +parts[2];
+    if (!y || !m || !d || y < 1900 || y > 2100) return null;
+    return { y: y, m: m, d: d };
+  }
+
+  function render() {
+    var dt = readDate();
+    if (!dt) return;
+    var h;
+    try { h = XJ.huangli(dt.y, dt.m, dt.d); }
+    catch (e) {
+      document.getElementById('hlDate').textContent = '——';
+      document.getElementById('hlSub').textContent = '日期超出支持范围（1900–2100 年）';
+      return;
+    }
+    document.getElementById('hlDate').textContent = h.lunar;
+    document.getElementById('hlSub').innerHTML =
+      h.solar + ' ' + h.week + '<br>' + h.gzYear + h.animal + '年 · ' +
+      (h.term ? '【' + h.term + '】' : '');
+    document.getElementById('yi').textContent = h.yi.length ? h.yi.join('、') : '（诸事平）';
+    document.getElementById('ji').textContent = h.ji.length ? h.ji.join('、') : '（无所大忌）';
+    document.getElementById('gz').innerHTML =
+      '年月日：' + h.gzYear + ' / ' + h.gzMonth + ' / ' + h.gzDay + '<br>建除：' + h.jianChu + '日';
+    document.getElementById('cs').textContent = h.chongSha;
+    zxCheck();
+  }
+
+  function zxCheck() {
+    var dt = readDate();
+    var out = document.getElementById('zxOut');
+    if (!dt) { out.textContent = ''; return; }
+    var h;
+    try { h = XJ.huangli(dt.y, dt.m, dt.d); }
+    catch (e) { out.textContent = ''; return; }
+    var thing = document.getElementById('zx').value;
+    if (h.yi.indexOf(thing) >= 0) {
+      out.innerHTML = '今日宜「' + esc(thing) + '」——<span class="good">吉，可为之。</span>';
+    } else if (h.ji.indexOf(thing) >= 0) {
+      out.innerHTML = '今日忌「' + esc(thing) + '」——<span class="bad">凶，宜缓之。</span>';
+    } else {
+      out.innerHTML = '今日于「' + esc(thing) + '」——<span class="flat">平，无大宜亦无大忌，择时而动可也。</span>';
+    }
+  }
+
+  dInput.addEventListener('change', render);
+  document.getElementById('zx').addEventListener('change', zxCheck);
+  document.getElementById('todayBtn').addEventListener('click', function () {
+    var t = new Date();
+    dInput.value = t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0');
+    render();
+  });
+  render();
+})();
+});
+</script>
+</body>
+</html>

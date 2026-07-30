@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>玄机阁 · 纯本地算命站</title>
+<meta name="description" content="玄机阁：纯本地、零依赖、零AI的中华命理文化站。灵签、黄历、八字、紫微、合婚、姓名学，历法内核本机演算，生辰不出本机。">
+<meta property="og:title" content="玄机阁 · 纯本地算命站">
+<meta property="og:description" content="灵签、黄历、八字、紫微、合婚、姓名学，纯本地演算，生辰不出本机。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<meta name="theme-color" content="#14110d">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">跳到主要内容</a>
+<div class="wrap" id="main">
+
+  <div class="topbar">
+    <div class="brand">
+      <span class="seal">玄</span>
+      <div><b>玄机阁</b><small>XUAN JI GE</small></div>
+    </div>
+    <nav class="nav">
+      <a href="modules/lingqian.html">灵签</a>
+      <a href="modules/huangli.html">黄历</a>
+      <a href="modules/bazi.html">八字</a>
+      <a href="modules/ziwei.html">紫微</a>
+      <a href="modules/hehun.html">合婚</a>
+      <a href="modules/nameology.html">姓名学</a>
+    </nav>
+  </div>
+
+  <header class="hero">
+    <div class="kicker">纯 本 地 · 零 依 赖 · 零 A I</div>
+    <h1>玄机阁</h1>
+    <p class="edict">欲知前路，先静其心。输入生辰，星盘自现；所言皆象，所断惟诚。</p>
+    <div class="today" id="today" aria-live="polite">今日：<b>—</b></div>
+  </header>
+
+  <div class="section-title">— 阁 中 所 藏 —</div>
+  <div class="grid">
+    <a class="tile reveal" href="modules/lingqian.html">
+      <span class="tag hot">首批</span>
+      <div class="ic">🏮</div>
+      <h3>灵签抽签</h3>
+      <p>心诚则灵，一签问事。本地随机，签诗解曰，给象不给令。</p>
+    </a>
+    <a class="tile reveal" href="modules/huangli.html">
+      <span class="tag hot">首批</span>
+      <div class="ic">📜</div>
+      <h3>黄历宜忌</h3>
+      <p>农历干支、节气建除、每日宜忌冲煞，兼简易择日。</p>
+    </a>
+    <a class="tile reveal" href="modules/bazi.html">
+      <span class="tag">核心</span>
+      <div class="ic">☯</div>
+      <h3>八字排盘</h3>
+      <p>四柱五行、十神大运，本机推算，不假外求。</p>
+    </a>
+    <a class="tile reveal" href="modules/ziwei.html">
+      <span class="tag">核心</span>
+      <div class="ic">🌌</div>
+      <h3>紫微斗数</h3>
+      <p>命宫起寅，十四主星飞四化，十二宫星曜自现。</p>
+    </a>
+    <a class="tile reveal" href="modules/hehun.html">
+      <span class="tag">进阶</span>
+      <div class="ic">💞</div>
+      <h3>八字合婚</h3>
+      <p>两造八字合参，生肖纳音日柱五行十神，五项合象。</p>
+    </a>
+    <a class="tile reveal" href="modules/nameology.html">
+      <span class="tag">进阶</span>
+      <div class="ic">𖤐</div>
+      <h3>姓名学</h3>
+      <p>五格剖象、三才五行、八十一数吉凶，康熙笔画本机演算。</p>
+    </a>
+  </div>
+
+  <div class="verse">「此阁诸法，皆在本机演算；生辰不出寸屏，笔墨惟出道诀。仅供观照，不作凭据。」<span class="src">— 阁训</span></div>
+
+  <div class="disclaimer">
+    免责声明：玄机阁所有内容均为中华传统历法与命理文化的<strong>娱乐体验与自我观照</strong>之用，
+    不构成任何医疗、心理或决策建议。本阁纯本地运行，所有历法演算均在本机完成，生辰信息不出本机；推算结果仅供文化参考，请理性看待。
+  </div>
+
+  <footer>玄机阁 · 纯本地算命站 · 双击即离线运行</footer>
+</div>
+
+<script defer src="assets/config.js"></script>
+<script defer src="assets/logger.js"></script>
+<script defer src="assets/core.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (window.XJ_LOG) XJ_LOG.install();
+  (function () {
+    var t = XJ.getTodayLunar();
+    document.getElementById('today').innerHTML =
+      '今日：<b>'+t.solar+'</b> 农历 <b>'+t.lunar+'</b> · <b>'+t.gzDay+'</b>日 · <b>'+t.animal+'</b>年';
+  })();
+  // 设置朱印 favicon：内联 SVG，无额外文件、无外链
+  (function () {
+    var svg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'>" +
+      "<circle cx='16' cy='16' r='14' fill='%23b23b2e'/>" +
+      "<text x='16' y='23' font-size='20' text-anchor='middle' " +
+      "font-family='serif' fill='%23f3e6c0'>玄</text></svg>";
+    var lk = document.querySelector("link[rel~='icon']");
+    if (lk) lk.href = 'data:image/svg+xml,' + svg;
+  })();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+name = "xuanji-ge"
+main = "worker.js"
+compatibility_date = "2025-07-01"
+
+# 纯静态资源由 Worker 在边缘节点直接托管，无需任何后端服务器。
+# 全部历法/八字演算仍在访客浏览器本地完成，数据从不出本机。
+[assets]
+directory = "dist"
+binding = "ASSETS"

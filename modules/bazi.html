@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>玄机阁 · 八字排盘</title>
+<meta name="description" content="玄机阁八字排盘：四柱五行、十神大运，纯本地历法内核演算，生辰不出本机，零依赖零AI。">
+<meta property="og:title" content="玄机阁 · 八字排盘">
+<meta property="og:description" content="四柱五行、十神大运，本机推算，不假外求。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<meta name="theme-color" content="#14110d">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">跳到主要内容</a>
+<div class="wrap" id="main">
+  <div class="topbar">
+    <div class="brand"><span class="seal">玄</span><div><b>玄机阁</b><small>八字排盘</small></div></div>
+    <nav class="nav">
+      <a href="../index.html">总纲</a><a href="lingqian.html">灵签</a><a href="huangli.html">黄历</a>
+      <a href="bazi.html">八字</a><a href="ziwei.html">紫微</a><a href="hehun.html">合婚</a><a href="nameology.html">姓名学</a>
+    </nav>
+  </div>
+
+  <header class="hero">
+    <div class="kicker">四 柱 · 五 行 · 大 运</div>
+    <h1>八字排盘</h1>
+    <p class="edict">年月日时，四柱既成；观五行之盈虚，察十神之向背。本机推算，不假外求。</p>
+  </header>
+
+  <div class="panel">
+    <div class="row">
+      <div><label for="by">出生年</label><input type="number" id="by" min="1900" max="2100" value="2000"></div>
+      <div><label for="bm">月</label><input type="number" id="bm" min="1" max="12" value="1"></div>
+      <div><label for="bd">日</label><input type="number" id="bd" min="1" max="31" value="1"></div>
+      <div><label for="bh">时（0–23）</label><input type="number" id="bh" min="0" max="23" value="0"></div>
+    </div>
+    <div class="row" style="margin-top:6px">
+      <div><label for="bg">性别</label>
+        <select id="bg"><option value="男">男</option><option value="女">女</option></select>
+      </div>
+      <div style="flex:0 0 auto;display:flex;align-items:flex-end">
+        <button class="btn gold" id="calcBtn">排 盘</button>
+      </div>
+    </div>
+
+    <div id="out" aria-live="polite" style="margin-top:20px"></div>
+  </div>
+
+  <div class="verse">「八字者，天地人时之纪也。强弱有数，喜忌有门；然运在己为，命由心转。此盘所示，皆象也。」<span class="src">— 八字阁训</span></div>
+
+  <div class="disclaimer">免责声明：八字排盘为中华命理文化之娱乐体验与自我观照，简化推演（以本气论五行、未纳藏干之全），不作任何人生决策依据。生辰信息仅在本机演算，绝不出户。</div>
+  <footer>玄机阁 · 纯本地 · 历法内核本机演算</footer>
+</div>
+
+<script defer src="../assets/config.js"></script>
+<script defer src="../assets/logger.js"></script>
+<script defer src="../assets/core.js"></script>
+<script defer src="../assets/bazi.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (window.XJ_LOG) XJ_LOG.install();
+  (function () {
+  function el(id) { return document.getElementById(id); }
+  function pillarTable(r) {
+    var p = r.piller;
+    var head = '<tr><th>四柱</th><th>年柱</th><th>月柱</th><th>日柱（日主）</th><th>时柱</th></tr>';
+    var gan = '<tr><td class="lbl">天干</td>' + p.gan.map(function (g, i) {
+      return '<td class="pillar-gan' + (i === 2 ? ' qian-edict' : '') + '">' + g + '</td>';
+    }).join('') + '</tr>';
+    var tg = '<tr><td class="lbl">十神</td>' + p.tg.map(function (t) {
+      return '<td>' + (t === '日主' ? '—' : t) + '</td>';
+    }).join('') + '</tr>';
+    var zhi = '<tr><td class="lbl">地支</td>' + p.zhi.map(function (z) {
+      return '<td class="pillar-zi">' + z + '</td>';
+    }).join('') + '</tr>';
+    var dz = '<tr><td class="lbl">本气十神</td>' + p.dz.map(function (t) {
+      return '<td>' + t + '</td>';
+    }).join('') + '</tr>';
+    return '<table class="bazi-table">' + head + gan + tg + zhi + dz + '</table>';
+  }
+
+  function showErr(msg) {
+    var p = document.createElement('p');
+    p.className = 'note';
+    p.textContent = '推算出错：' + msg;
+    el('out').innerHTML = '';
+    el('out').appendChild(p);
+  }
+
+  function render() {
+    var y = +el('by').value, m = +el('bm').value, d = +el('bd').value,
+        h = +el('bh').value, g = el('bg').value;
+    if (!y || !m || !d) return;
+    if (y < 1900 || y > 2100) { showErr('出生年仅支持 1900–2100。'); return; }
+    var r;
+    try { r = XJ_BAZI.bazi(y, m, d, h, g); }
+    catch (e) { showErr(e.message); return; }
+
+    var wx = '<div class="wuxing-bar">';
+    ['木', '火', '土', '金', '水'].forEach(function (w) {
+      wx += '<span>' + w + ' ' + r.wx[w] + '</span>';
+    });
+    wx += '</div>';
+
+    var dy = '<div class="wuxing-bar">';
+    r.daYun.forEach(function (s) { dy += '<span>' + s.age + '岁 ' + s.gz + '</span>'; });
+    dy += '</div>';
+
+    var html = '';
+    html += '<h2 style="font-size:18px">四柱 · ' + r.text.four.join(' ') + '</h2>';
+    html += pillarTable(r);
+    html += '<div class="note" style="margin-top:12px">五行：' + r.text.wxLine + '　|　' + r.text.meLine +
+      '　|　' + r.text.daYunLine + '</div>';
+    html += '<div style="margin:10px 0 4px;color:var(--muted);font-size:13px">五行分布</div>' + wx;
+    html += '<div style="margin:16px 0 4px;color:var(--muted);font-size:13px">大运（十年一步）</div>' + dy;
+    html += '<p class="note" style="margin-top:14px">简析（文化参考）：日主' + r.me + '属' + r.meWx +
+      '，' + (r.strong ? '得党偏旺，宜泄秀' : '偏弱，宜生扶') + '。所喜约在：' + r.xi.join('、') + '。</p>';
+    el('out').innerHTML = html;
+  }
+
+  el('calcBtn').addEventListener('click', render);
+  render();
+})();
+});
+</script>
+</body>
+</html>

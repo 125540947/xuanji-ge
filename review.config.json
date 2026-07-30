@@ -1,0 +1,13 @@
+{
+  "project": "玄机阁",
+  "include": ["*.js", "**/*.js", "*.html", "**/*.html", "*.css", "**/*.css"],
+  "exclude": ["node_modules/**", "reports/**", "review-rules/**", "dist/**", "worker.js", "assets/kangxi-strokes.js", "assets/kangxi-alt.js", "assets/regression-test.js", "assets/adversarial-probe.js", "integration-test.js"],
+  "customRules": ["review-rules/no-western-occult.js"],
+  "rules": {
+    "style/use-var": { "enabled": false, "note": "玄机阁核心为兼容老式环境有意使用 var，关闭此检查" },
+    "style/line-length": { "severity": "info", "params": { "max": 140 } },
+
+    "security/no-external-fetch": { "severity": "critical", "note": "纯本地、零远程是玄机阁硬约束，外联即致命" },
+    "security/no-innerhtml-var": { "severity": "high", "note": "玄机阁确用 innerHTML 渲染签诗/排盘，内容为内嵌可信常量；命中处须确认来源可信" }
+  }
+}

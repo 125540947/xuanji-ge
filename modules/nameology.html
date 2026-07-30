@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>玄机阁 · 姓名学（五格剖象）</title>
+<meta name="description" content="玄机阁姓名学：五格剖象、三才五行、81 数理吉凶，并可结合八字喜用神对照，纯本地康熙笔画演算，姓名不出本机，零依赖零AI。">
+<meta property="og:title" content="玄机阁 · 姓名学（五格剖象）">
+<meta property="og:description" content="五格剖象、三才配置、81 数理吉凶，并可结合八字喜用神对照，本机推算，不假外求。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<meta name="theme-color" content="#14110d">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">跳到主要内容</a>
+<div class="wrap" id="main">
+  <div class="topbar">
+    <div class="brand"><span class="seal">玄</span><div><b>玄机阁</b><small>姓名学 · 五格剖象</small></div></div>
+    <nav class="nav">
+      <a href="../index.html">总纲</a><a href="lingqian.html">灵签</a><a href="huangli.html">黄历</a>
+      <a href="bazi.html">八字</a><a href="ziwei.html">紫微</a><a href="hehun.html">合婚</a><a href="nameology.html">姓名学</a>
+    </nav>
+  </div>
+
+  <header class="hero">
+    <div class="kicker">五 格 · 三 才 · 八 十 一 数</div>
+    <h1>姓名学 · 五格剖象</h1>
+    <p class="edict">姓者承天，名者立身。以康熙笔画起五格，观三才之生克，参八十一数之吉凶，并可合八字喜用神以相济。本机推算，不假外求。</p>
+  </header>
+
+  <div class="panel">
+    <div class="row">
+      <div style="flex:1 1 160px">
+        <label for="xm">姓氏</label>
+        <input type="text" id="xm" placeholder="如：王 / 欧阳（复姓）" value="王" maxlength="2" inputmode="text">
+      </div>
+      <div style="flex:1 1 160px">
+        <label for="mz">名字</label>
+        <input type="text" id="mz" placeholder="如：小明（单/双名皆可）" value="小明" maxlength="2" inputmode="text">
+      </div>
+      <div style="flex:0 0 auto;display:flex;align-items:flex-end">
+        <button class="btn gold" id="calcBtn" type="button">起 名 盘</button>
+      </div>
+    </div>
+    <p class="note" style="margin-top:10px">说明：复姓（如欧阳、司马）请填两字于「姓氏」框，名字填「名字」框
+      （单名或双名皆可）；笔画依康熙字典（非简体笔画）。部分字存在流派异说（如「陳」15/16 两说），
+      系统会提示并可按异说重算。起名仅作文化参考，勿执为定数。</p>
+
+    <div class="row" style="margin-top:12px;align-items:flex-end">
+      <div style="flex:1 1 90px">
+        <label for="by">出生年</label>
+        <input type="number" id="by" placeholder="1990" inputmode="numeric">
+      </div>
+      <div style="flex:1 1 70px">
+        <label for="bm">月</label>
+        <input type="number" id="bm" placeholder="6" min="1" max="12" inputmode="numeric">
+      </div>
+      <div style="flex:1 1 70px">
+        <label for="bd">日</label>
+        <input type="number" id="bd" placeholder="15" min="1" max="31" inputmode="numeric">
+      </div>
+      <div style="flex:1 1 70px">
+        <label for="bh">时(0-23)</label>
+        <input type="number" id="bh" placeholder="12" min="0" max="23" inputmode="numeric">
+      </div>
+      <div style="flex:1 1 90px">
+        <label for="bg">性别</label>
+        <select id="bg"><option value="男">男</option><option value="女">女</option></select>
+      </div>
+    </div>
+    <p class="note" style="margin-top:6px">选填：填出生年月日时（公历）与性别，可将姓名五行与八字喜用神对照，作文化参考。留空则仅作姓名学推演。</p>
+
+    <div id="out" aria-live="polite" style="margin-top:20px"></div>
+  </div>
+
+  <div class="verse">「名以正体，字以表德。五格者，数理之纲也；三才者，气运之枢也。吉凶之数示其势，修为之心定其归。」<span class="src">— 姓名阁训</span></div>
+
+  <div class="disclaimer">免责声明：姓名学为中华姓名文化之娱乐体验与自我观照，依通用「五格剖象法」简化推演，笔画取自康熙字典，数理吉凶仅为传统说法；八字喜用神对照亦为简化文化推演，不作任何人生决策依据。所输入信息仅在本机演算，绝不出户。</div>
+  <footer>玄机阁 · 纯本地 · 康熙笔画本机演算</footer>
+</div>
+
+<script defer src="../assets/config.js"></script>
+<script defer src="../assets/logger.js"></script>
+<script defer src="../assets/core.js"></script>
+<script defer src="../assets/bazi.js"></script>
+<script defer src="../assets/kangxi-strokes.js"></script>
+<script defer src="../assets/kangxi-alt.js"></script>
+<script defer src="../assets/nameology.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (window.XJ_LOG) XJ_LOG.install();
+  (function () {
+  function el(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function jiClass(level) { return level === 1 ? 'ji-good' : (level === 2 ? 'ji-bad' : 'ji-mid'); }
+
+  // 异说覆盖（用户点击「按异说重算」后写入），与当前结果中报告的 alts 联动
+  var currentAlt = {};
+  var lastAlts = [];
+
+  function gridRow(grids) {
+    var names = '<tr><th>格局</th>' + grids.map(function (g) { return '<th>' + g.name + '</th>'; }).join('') + '</tr>';
+    var vals = '<tr><td class="lbl">笔画数</td>' + grids.map(function (g) { return '<td>' + g.value + '</td>'; }).join('') + '</tr>';
+    var wx = '<tr><td class="lbl">五行</td>' + grids.map(function (g) { return '<td>' + g.wuxing + '</td>'; }).join('') + '</tr>';
+    var ji = '<tr><td class="lbl">吉凶</td>' + grids.map(function (g) {
+      return '<td class="' + jiClass(g.level) + '">' + g.ji + '</td>';
+    }).join('') + '</tr>';
+    return '<table class="name-table">' + names + vals + wx + ji + '</table>';
+  }
+
+  // 姓名五行 vs 八字喜用神对照（选填生辰时启用）
+  function baziLinkHtml(r) {
+    var y = parseInt(el('by').value, 10), mo = parseInt(el('bm').value, 10),
+        d = parseInt(el('bd').value, 10), h = parseInt(el('bh').value, 10), gd = el('bg').value;
+    if (!y || !mo || !d) return '';
+    if (typeof XJ_BAZI === 'undefined' || !XJ_BAZI.bazi) return '';
+    var bz;
+    try { bz = XJ_BAZI.bazi(y, mo, d, (isNaN(h) ? 12 : h), gd || '男'); }
+    catch (e) { return '<div class="name-bazi"><p class="note">生辰有误：' + esc(e.message) + '</p></div>'; }
+    var advice = Nameology.nameBaziAdvice(r, bz);
+    var dist = Nameology.wuxingDist(r);
+    var wxLine = ['木', '火', '土', '金', '水'].map(function (w) { return w + dist.wx[w]; }).join(' ');
+    return '<div class="name-bazi">'
+      + '<h3>名·命相济（结合八字喜用神）</h3>'
+      + '<p class="note">日主 ' + bz.me + '（' + bz.meWx + '）' + (bz.strong ? '得党偏旺' : '偏弱')
+      + '；喜用：' + bz.xiWx.join('、') + '；忌：' + bz.jiWx.join('、') + '。</p>'
+      + '<p class="note">姓名五行分布：' + wxLine + '</p>'
+      + '<p class="verdict">' + esc(advice.advice) + '</p>'
+      + '</div>';
+  }
+
+  function render() {
+    var xm = el('xm').value.trim(), mz = el('mz').value.trim();
+    var r;
+    try {
+      r = (typeof Nameology !== 'undefined') ? Nameology.compute(xm, mz, { altOverride: currentAlt }) : null;
+    } catch (e) {
+      if (window.XJ_LOG) XJ_LOG.error('姓名学演算异常', e);
+      el('out').innerHTML = '<p class="note">演算时发生异常，请稍后再试。</p>';
+      return;
+    }
+    if (!r) { el('out').innerHTML = '<p class="note">演算引擎未载入。</p>'; return; }
+    if (r.error) {
+      el('out').innerHTML = '<p class="note">' + esc(r.error) + '</p>';
+      return;
+    }
+
+    lastAlts = r.alts || [];
+    var usingAlt = Object.keys(currentAlt).length > 0;
+    var html = '';
+    html += '<h2 style="font-size:18px">名盘 · ' + esc(r.surname) + ' ' + esc(r.given)
+      + (usingAlt ? '（异说重算）' : '') + '</h2>';
+
+    var s = r.summary;
+    html += '<div class="name-summary" role="status">'
+      + '<span class="ji-good">吉 ' + s.good + '</span>'
+      + '<span class="ji-mid">半吉 ' + s.mid + '</span>'
+      + '<span class="ji-bad">凶 ' + s.bad + '</span>'
+      + '<p class="verdict">' + esc(s.verdict) + '</p>'
+      + '</div>';
+
+    // 异说提示 + 重算 / 恢复
+    if (lastAlts.length && !usingAlt) {
+      var altTxt = lastAlts.map(function (a) {
+        return esc(a.ch) + ' 另有 ' + a.alts.join('/') + ' 画一说（现取 ' + a.main + ' 画）';
+      }).join('；');
+      html += '<div class="name-alt-note">注：' + altTxt
+        + '。<button class="btn" id="altBtn" type="button">按异说笔画重算</button></div>';
+    } else if (usingAlt) {
+      var usedTxt = Object.keys(currentAlt).map(function (k) { return esc(k) + ':' + currentAlt[k] + '画'; }).join('；');
+      html += '<div class="name-alt-note">已按异说笔画（' + usedTxt
+        + '）重算。<button class="btn" id="altReset" type="button">恢复主流笔画</button></div>';
+    }
+
+    html += gridRow(r.grids);
+
+    html += '<div style="margin:14px 0 4px;color:var(--muted);font-size:13px">各格释义</div>';
+    html += '<div class="name-notes">';
+    r.grids.forEach(function (g) {
+      html += '<p><b>' + g.name + '（' + g.value + ' · ' + g.ji + '）</b>'
+        + '<span class="src">' + esc(g.from) + '</span>：' + esc(g.text) + '</p>';
+    });
+    html += '</div>';
+
+    var sc = r.sanCai;
+    html += '<h3 style="margin-top:18px;font-size:16px">三才配置 · ' + sc.tian + sc.ren + sc.di + '</h3>';
+    html += '<div class="name-sancai">天格<b>' + sc.tian + '</b> · 人格<b>' + sc.ren + '</b> · 地格<b>' + sc.di + '</b></div>';
+    html += '<p class="note">' + esc(sc.text) + '</p>';
+
+    // 八字喜用神联动（选填）
+    html += baziLinkHtml(r);
+
+    el('out').innerHTML = html;
+
+    if (lastAlts.length && !usingAlt) {
+      var ab = el('altBtn');
+      if (ab) ab.addEventListener('click', function () {
+        lastAlts.forEach(function (a) { currentAlt[a.ch] = a.alts[0]; });
+        render();
+      });
+    } else if (usingAlt) {
+      var rb = el('altReset');
+      if (rb) rb.addEventListener('click', function () { currentAlt = {}; render(); });
+    }
+  }
+
+  el('calcBtn').addEventListener('click', render);
+  ['by', 'bm', 'bd', 'bh', 'bg'].forEach(function (id) {
+    var node = el(id);
+    if (node) node.addEventListener('change', render);
+  });
+  render();
+})();
+});
+</script>
+</body>
+</html>
