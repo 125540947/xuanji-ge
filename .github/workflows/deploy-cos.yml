@@ -1,4 +1,4 @@
-name: Deploy to Tencent Cloud COS
+  name: Deploy to Tencent Cloud COS
 
   on:
     push:
@@ -45,6 +45,6 @@ name: Deploy to Tencent Cloud COS
             region = ap-guangzhou
             bucket = xuanjige-1252634115
             EOF
-
         - name: Sync to COS
           run: |
+            coscli sync dist/ cos://xuanjige-1252634115/
