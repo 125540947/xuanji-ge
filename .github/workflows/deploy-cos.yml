@@ -29,22 +29,12 @@ jobs:
              assets/kangxi-strokes.js assets/kangxi-alt.js assets/style.css dist/assets/
           cp modules/*.html dist/modules/
 
-      - name: Install coscli
-        run: |
-          curl -sL "https://github.com/tencentyun/coscli/releases/latest/download/coscli-linux-amd64" -o /usr/local/bin/coscli
-          chmod +x /usr/local/bin/coscli
-
-      - name: Configure coscli
-        run: |
-          mkdir -p ~/.cos
-          cat > ~/.cos/config <<EOF
-          [common]
-          secret_id = ${{ secrets.COS_SECRET_ID }}
-          secret_key = ${{ secrets.COS_SECRET_KEY }}
-          region = ap-guangzhou
-          bucket = xuanjige-1252634115
-          EOF
-
-      - name: Sync to COS
-        run: |
-          coscli sync dist/ cos://xuanjige-1252634115/
+      - name: Deploy to COS
+        uses: imranbarbhuiya/tencent-cos-action@v0.1.0
+        with:
+          secret_id: ${{ secrets.COS_SECRET_ID }}
+          secret_key: ${{ secrets.COS_SECRET_KEY }}
+          region: ap-guangzhou
+          bucket: xuanjige-1252634115
+          dist: dist/
+          clear: true
