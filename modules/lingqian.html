@@ -9,11 +9,11 @@
 <meta property="og:description" content="心诚则灵，一签问事，给象不给令。">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="zh_CN">
-<meta name="theme-color" content="#14110d">
+<meta name="theme-color" content="#f6f2ea">
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="../assets/style.css">
 </head>
-<body>
+<body class="lingqian-light">
 <a class="skip" href="#main">跳到主要内容</a>
 <div class="wrap" id="main">
   <div class="topbar">
@@ -32,8 +32,10 @@
 
   <div class="panel">
     <div class="qian-stage">
-      <div class="qian-tube" id="tube"><span class="qian-glyph">籤</span><div class="qian-shuffle" id="shuffle" aria-hidden="true"></div></div>
-      <button class="btn gold" id="drawBtn">求 签</button>
+      <div class="qian-altar" id="altar">
+        <div class="qian-tube" id="tube"><span class="qian-glyph">籤</span><div class="qian-shuffle" id="shuffle" aria-hidden="true"></div></div>
+      </div>
+      <button class="btn gold" id="drawBtn" aria-busy="false">求 签</button>
     </div>
     <div class="qian-result is-hidden" id="result" aria-live="polite">
       <div class="qian-no" id="qNo"></div>
@@ -59,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (window.XJ_LOG) XJ_LOG.install();
   (function () {
     var btn = document.getElementById('drawBtn');
+    var altar = document.getElementById('altar');
     var tube = document.getElementById('tube');
     var shuffle = document.getElementById('shuffle');
     var result = document.getElementById('result');
@@ -66,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var lines = lineIds.map(function (id) { return document.getElementById(id); });
 
     var anim = new XJ_QIAN_ANIM.Anim({
-      els: { tube: tube, shuffle: shuffle, btn: btn, result: result, lines: lines },
+      els: { altar: altar, tube: tube, shuffle: shuffle, btn: btn, result: result, lines: lines },
       getQian: function () { return XJ_QIAN.draw(); },
       hooks: {
         onReveal: function (q) {
@@ -85,6 +88,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     btn.addEventListener('click', function () { anim.run(); });
+
+    // 切到后台时立即定签，避免定时器被节流导致动画残留、按钮卡死
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) anim.settle();
+    });
   })();
 });
 </script>

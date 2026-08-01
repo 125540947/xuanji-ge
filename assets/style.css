@@ -24,6 +24,21 @@
   --wx-tu:#caa030;   /* 土 黄 */
   --wx-jin:#b8b8b8;  /* 金 白 */
   --wx-shui:#2f6fb0; /* 水 蓝 */
+  /* —— 灵签法阵特效令牌（深色皮肤，白底皮肤在 .lingqian-light 覆盖）—— */
+  --qian-glow:rgba(218,178,103,.42);        /* 筒身凝光 */
+  --qian-aura:rgba(218,178,103,.22);        /* 地气内圈 */
+  --qian-aura-2:rgba(218,178,103,.07);      /* 地气外圈 */
+  --qian-rune:#a98a4c;                      /* 八卦符文 */
+  --qian-rune-glow:rgba(218,178,103,.45);
+  --qian-mote:#edd9a6;                      /* 灵气粒子 */
+  --qian-mote-glow:rgba(218,178,103,.55);
+  --qian-ray:#edd9a6;                       /* 绽放放射光 */
+  --qian-burst-in:rgba(255,246,225,.95);    /* 光爆核心 */
+  --qian-burst-mid:rgba(218,178,103,.55);
+  --qian-stick-face:linear-gradient(180deg,#f4ead4,#dcc79f); /* 签条正面 */
+  --qian-stick-edge:rgba(120,90,40,.55);
+  --qian-stick-ink:#3a2c12;
+  --qian-trail:rgba(218,178,103,.9);        /* 签条拖尾 */
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
@@ -141,9 +156,12 @@ input:focus,select:focus{border-color:var(--gold-dim)}
 
 /* —— 灵签 —— */
 .qian-stage{text-align:center;padding:18px 0}
-.qian-tube{width:84px;height:120px;margin:0 auto 18px;border:1px solid var(--gold-dim);
+/* 法坛：承载签筒与全部道法特效层，特效由 lingqian-anim.js 按需注入 */
+.qian-altar{position:relative;width:216px;height:216px;margin:0 auto 6px;
+  display:grid;place-items:center;perspective:640px;isolation:isolate}
+.qian-tube{width:84px;height:120px;margin:0;border:1px solid var(--gold-dim);
   border-radius:10px 10px 6px 6px;background:linear-gradient(180deg,var(--ink-3),var(--ink));
-  position:relative;overflow:hidden}
+  position:relative;overflow:hidden;z-index:2}
 .qian-tube:before{content:"";position:absolute;inset:6px 10px;border:1px solid rgba(201,168,106,.25);border-radius:6px}
 .qian-glyph{position:absolute;inset:0;display:grid;place-items:center;color:var(--gold-dim);font-size:30px}
 .qian-result{max-width:560px;margin:0 auto}
@@ -270,8 +288,73 @@ button:focus-visible,textarea:focus-visible{outline:2px solid var(--gold-soft);
     60%{opacity:1}100%{transform:rotate(0) translateY(0);opacity:1}}
   .qian-draw{animation:xj-draw .7s cubic-bezier(.2,.7,.3,1) both}
 
-  /* —— 灵签抽签动画（墨金道风 · 含蓄内敛）—— */
-  .qian-tube{position:relative}
+  /* ══════════════════════════════════════════════════════════════
+     灵签 · 道法抽签动效（聚灵 → 摇筒 → 签飞 → 绽放 → 定签）
+     只驱动 transform / opacity / filter，不触发重排。
+     全部特效元素 aria-hidden，由 lingqian-anim.js 注入。
+     ══════════════════════════════════════════════════════════════ */
+
+  /* ── 阶段一 · 聚灵：地气光晕 ── */
+  .qian-halo{
+    position:absolute;left:50%;top:50%;width:214px;height:214px;margin:-107px 0 0 -107px;
+    border-radius:50%;pointer-events:none;z-index:0;opacity:0;
+    transition:opacity 460ms ease;
+    background:radial-gradient(circle,
+      var(--qian-aura),var(--qian-aura-2) 42%,transparent 70%);
+  }
+  .qian-halo.is-on{opacity:1;animation:xj-halo 2.8s ease-in-out infinite}
+  @keyframes xj-halo{0%,100%{transform:scale(1)}50%{transform:scale(1.13)}}
+
+  /* ── 阶段一 · 聚灵：八卦符文环 ── */
+  .qian-runes{
+    position:absolute;inset:0;pointer-events:none;z-index:1;
+    opacity:0;transition:opacity 420ms ease;
+  }
+  .qian-runes.is-in{opacity:1}
+  .rune-ring{position:absolute;inset:0;--ring:92px}
+  .qian-runes.is-in .rune-ring{
+    animation:xj-rune-in 640ms cubic-bezier(.2,.7,.3,1) both,
+              xj-rune-spin 18s linear 640ms infinite;
+  }
+  .rune{
+    position:absolute;left:50%;top:50%;width:1.5em;height:1.5em;margin:-.75em 0 0 -.75em;
+    display:grid;place-items:center;font-size:15px;line-height:1;
+    color:var(--qian-rune);text-shadow:0 0 10px var(--qian-rune-glow);
+    transform:rotate(var(--a)) translateY(calc(var(--ring) * -1)) rotate(calc(var(--a) * -1));
+    animation:xj-rune-glow 2.4s ease-in-out var(--d) infinite;
+  }
+  @keyframes xj-rune-in{
+    0%{opacity:0;transform:scale(1.42) rotate(-26deg)}
+    55%{opacity:1}
+    100%{opacity:1;transform:scale(1) rotate(0)}
+  }
+  @keyframes xj-rune-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+  @keyframes xj-rune-glow{0%,100%{opacity:.45}50%{opacity:1}}
+
+  /* ── 阶段一 · 聚灵：灵气粒子向筒身汇聚 ── */
+  .qian-motes{position:absolute;inset:0;pointer-events:none;z-index:3}
+  .mote{
+    position:absolute;left:50%;top:50%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;
+    border-radius:50%;background:var(--qian-mote);
+    box-shadow:0 0 9px 2px var(--qian-mote-glow);
+    opacity:0;transform:translate(var(--tx),var(--ty)) scale(var(--s));
+  }
+  .qian-motes.is-in .mote{animation:xj-mote 1200ms cubic-bezier(.42,0,.3,1) var(--d) infinite}
+  @keyframes xj-mote{
+    0%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(var(--s))}
+    22%{opacity:.9}
+    100%{opacity:0;transform:translate(0,0) scale(.18)}
+  }
+
+  /* ── 阶段一 · 聚灵：筒身凝光升起 ── */
+  .qian-tube.is-charging{animation:xj-charge 600ms cubic-bezier(.3,.7,.3,1) both}
+  @keyframes xj-charge{
+    0%{transform:translateY(0) scale(1);box-shadow:0 0 0 0 transparent}
+    55%{transform:translateY(-6px) scale(1.06)}
+    100%{transform:translateY(-3px) scale(1.03);box-shadow:0 0 30px 4px var(--qian-glow)}
+  }
+
+  /* ── 阶段二 · 摇筒：筒身摇振（含轻微 3D 转体）+ 签影翻涌 ── */
   .qian-shuffle{position:absolute;inset:0;overflow:hidden;border-radius:6px;opacity:0;pointer-events:none}
   .qian-shuffle.is-rolling{opacity:1}
   .qian-shuffle:before{
@@ -279,37 +362,95 @@ button:focus-visible,textarea:focus-visible{outline:2px solid var(--gold-soft);
     position:absolute;left:0;right:0;top:0;text-align:center;
     color:var(--gold);font-size:30px;line-height:1.25;letter-spacing:.08em;
     text-shadow:0 0 12px rgba(218,178,103,.55);
-    animation:xj-roll .42s linear infinite;
+    animation:xj-roll .38s linear infinite;
   }
   @keyframes xj-roll{from{transform:translateY(-22%)}to{transform:translateY(6%)}}
-  /* 起签：凝光呼吸 */
-  .qian-tube.is-charging{animation:xj-charge 480ms ease both}
-  @keyframes xj-charge{
-    0%{transform:scale(1);box-shadow:0 0 0 0 rgba(218,178,103,0)}
-    50%{transform:scale(1.06)}
-    100%{transform:scale(1);box-shadow:0 0 26px 3px rgba(218,178,103,.4)}
+  .qian-tube.is-shaking{
+    animation:xj-shake 1100ms cubic-bezier(.36,.07,.19,.97) both;
+    box-shadow:0 0 30px 4px var(--qian-glow);
   }
-  /* 摇签：摇振 */
-  .qian-tube.is-shaking{animation:xj-shake 1500ms cubic-bezier(.36,.07,.19,.97) both}
   @keyframes xj-shake{
-    0%,100%{transform:rotate(0) translateX(0)}
-    10%{transform:rotate(-6deg) translateX(-4px)}
-    20%{transform:rotate(6deg) translateX(4px)}
-    30%{transform:rotate(-5deg) translateX(-3px)}
-    40%{transform:rotate(5deg) translateX(3px)}
-    55%{transform:rotate(-3deg) translateX(-2px)}
-    70%{transform:rotate(3deg) translateX(2px)}
-    85%{transform:rotate(-1.5deg) translateX(-1px)}
+    0%,100%{transform:translateY(-3px) rotate(0) rotateY(0)}
+    10%{transform:translateY(-4px) rotate(-7deg) rotateY(14deg)}
+    22%{transform:translateY(-3px) rotate(7deg) rotateY(-14deg)}
+    34%{transform:translateY(-5px) rotate(-6deg) rotateY(11deg)}
+    46%{transform:translateY(-3px) rotate(6deg) rotateY(-11deg)}
+    60%{transform:translateY(-4px) rotate(-4deg) rotateY(7deg)}
+    74%{transform:translateY(-3px) rotate(4deg) rotateY(-7deg)}
+    88%{transform:translateY(-3px) rotate(-2deg) rotateY(3deg)}
   }
-  /* 落签：签影升出 */
-  .qian-tube.is-rise .qian-glyph{animation:xj-rise 480ms cubic-bezier(.2,.7,.3,1) both}
-  @keyframes xj-rise{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-72px);opacity:0}}
-  /* 揭晓：卷轴展开 */
-  .qian-result.scroll-open{animation:xj-scroll 560ms cubic-bezier(.2,.7,.3,1) both;transform-origin:top center}
+
+  /* ── 阶段三 · 签飞：签条抛物线出筒 + 灵光拖尾 ── */
+  .qian-tube.is-rise .qian-glyph{animation:xj-rise 460ms cubic-bezier(.2,.7,.3,1) both}
+  @keyframes xj-rise{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-64px);opacity:0}}
+  .qian-stick{
+    position:absolute;left:50%;top:50%;width:17px;height:66px;margin:-54px 0 0 -8.5px;
+    z-index:5;pointer-events:none;opacity:0;
+    border-radius:3px 3px 2px 2px;border:1px solid var(--qian-stick-edge);
+    background:var(--qian-stick-face);
+    box-shadow:0 3px 12px rgba(0,0,0,.28);
+    display:grid;place-items:center;align-content:end;padding-bottom:8px;
+    font-family:var(--kai);font-size:12px;color:var(--qian-stick-ink);
+  }
+  .qian-stick:before{ /* 朱砂签头 */
+    content:"";position:absolute;left:-1px;right:-1px;top:-1px;height:14px;
+    background:linear-gradient(180deg,var(--cinnabar),var(--cinnabar-soft));
+    border-radius:3px 3px 0 0;
+  }
+  .qian-stick:after{ /* 灵光拖尾 */
+    content:"";position:absolute;left:50%;top:100%;width:3px;height:58px;margin-left:-1.5px;
+    border-radius:2px;transform:scaleY(0);transform-origin:50% 0;opacity:0;
+    background:linear-gradient(180deg,var(--qian-trail),transparent);
+  }
+  .qian-stick.is-fly{animation:xj-stick 560ms cubic-bezier(.18,.72,.3,1) both}
+  .qian-stick.is-fly:after{animation:xj-trail 560ms ease both}
+  @keyframes xj-stick{
+    0%{opacity:0;transform:translate(0,28px) rotate(-8deg) scale(.82)}
+    16%{opacity:1}
+    58%{transform:translate(7px,-78px) rotate(11deg) scale(1.06)}
+    100%{opacity:0;transform:translate(15px,-50px) rotate(26deg) scale(.96)}
+  }
+  @keyframes xj-trail{
+    0%{transform:scaleY(0);opacity:0}
+    38%{transform:scaleY(1);opacity:.85}
+    100%{transform:scaleY(.18);opacity:0}
+  }
+
+  /* ── 阶段四 · 绽放：光芒异象（中心光爆 + 放射灵光）── */
+  .qian-burst{position:absolute;left:50%;top:calc(50% - 58px);width:0;height:0;z-index:4;pointer-events:none}
+  .qian-burst .core{
+    position:absolute;left:0;top:0;width:132px;height:132px;margin:-66px 0 0 -66px;
+    border-radius:50%;opacity:0;
+    background:radial-gradient(circle,
+      var(--qian-burst-in),var(--qian-burst-mid) 38%,transparent 70%);
+  }
+  .qian-burst.is-bloom .core{animation:xj-burst 720ms cubic-bezier(.2,.7,.3,1) both}
+  @keyframes xj-burst{
+    0%{opacity:0;transform:scale(.22)}
+    22%{opacity:1}
+    100%{opacity:0;transform:scale(2.35)}
+  }
+  .qian-burst .ray{
+    position:absolute;left:0;top:0;width:2px;height:56px;margin:-56px 0 0 -1px;
+    border-radius:2px;transform-origin:50% 100%;opacity:0;
+    background:linear-gradient(180deg,transparent,var(--qian-ray));
+  }
+  .qian-burst.is-bloom .ray{animation:xj-ray 640ms cubic-bezier(.2,.7,.3,1) var(--d) both}
+  @keyframes xj-ray{
+    0%{opacity:0;transform:rotate(var(--r)) translateY(8px) scaleY(.12)}
+    28%{opacity:.95}
+    100%{opacity:0;transform:rotate(var(--r)) translateY(-32px) scaleY(1.18)}
+  }
+
+  /* ── 阶段五 · 定签：卷轴展开 + 结果行错峰上浮 ── */
+  .qian-result.scroll-open{animation:xj-scroll 520ms cubic-bezier(.2,.7,.3,1) both;transform-origin:top center}
   @keyframes xj-scroll{0%{transform:scaleY(.04);opacity:0}60%{opacity:1}100%{transform:scaleY(1);opacity:1}}
-  /* 揭晓：结果行错峰上浮 */
   .reveal-line{animation:xj-reveal-up 520ms ease both}
   @keyframes xj-reveal-up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  /* 动画期间提示合成层，动画结束即回收，避免长期占用显存 */
+  .qian-altar.is-active .qian-tube,
+  .qian-stick.is-fly{will-change:transform}
 }
 
 /* —— 响应式 —— */
@@ -324,6 +465,14 @@ button:focus-visible,textarea:focus-visible{outline:2px solid var(--gold-soft);
   .couple{grid-template-columns:1fr}
   .duel{grid-template-columns:1fr;gap:10px;text-align:center}
   .duel .mid{transform:rotate(90deg)}
+  /* 灵签法坛：窄屏收敛尺寸，符文环内缩，避免溢出面板 */
+  .qian-altar{width:182px;height:182px}
+  .qian-tube{width:74px;height:106px}
+  .rune-ring{--ring:76px}
+  .rune{font-size:13px}
+  .qian-halo{width:178px;height:178px;margin:-89px 0 0 -89px}
+  .qian-burst .core{width:112px;height:112px;margin:-56px 0 0 -56px}
+  .qian-burst .ray{height:46px;margin-top:-46px}
 }
 @media(max-width:460px){
   .grid{grid-template-columns:1fr}
@@ -337,6 +486,71 @@ button:focus-visible,textarea:focus-visible{outline:2px solid var(--gold-soft);
 .ji-good{color:var(--gold-soft);font-weight:600}
 .ji-bad{color:var(--cinnabar-soft,#b5402f);font-weight:600}
 .ji-mid{color:#d8a24a;font-weight:600}
+
+/* —— 灵签 · 宣纸白主题（lingqian-light）—— */
+body.lingqian-light{
+  --lj-bg:#f6f2ea;
+  --lj-card:#fffdf8;
+  --lj-ink:#211a10;
+  --lj-sub:#6b6155;
+  --lj-gold:#b8893f;
+  --lj-gold-soft:#caa45a;
+  --lj-line:rgba(33,26,16,.14);
+  --lj-cinnabar:#b5402f;
+  background:
+    radial-gradient(900px 500px at 85% -8%,rgba(181,64,47,.05),transparent 60%),
+    radial-gradient(800px 480px at 4% 2%,rgba(184,138,63,.09),transparent 55%),
+    var(--lj-bg);
+  color:var(--lj-ink);
+}
+body.lingqian-light .topbar{
+  background:rgba(246,242,234,.82);
+  border-bottom-color:var(--lj-line);
+}
+body.lingqian-light .brand b{color:var(--lj-ink)}
+body.lingqian-light .brand small{color:var(--lj-sub)}
+body.lingqian-light .brand .seal{color:var(--lj-cinnabar);border-color:var(--lj-cinnabar)}
+body.lingqian-light .nav a{color:var(--lj-sub)}
+body.lingqian-light .nav a:hover{color:var(--lj-gold)}
+body.lingqian-light .hero h1{color:var(--lj-ink);text-shadow:none}
+body.lingqian-light .hero .kicker{color:var(--lj-cinnabar)}
+body.lingqian-light .hero .edict{color:var(--lj-sub);opacity:1}
+body.lingqian-light .hero:before,body.lingqian-light .hero:after{color:var(--lj-gold-soft)}
+body.lingqian-light .btn.gold{color:var(--lj-ink);background:rgba(184,138,63,.10);border-color:var(--lj-gold)}
+body.lingqian-light .btn.gold:hover{background:rgba(184,138,63,.18);color:var(--lj-ink)}
+body.lingqian-light .panel{background:var(--lj-card);border-color:var(--lj-line);box-shadow:0 12px 34px rgba(33,26,16,.07)}
+body.lingqian-light .qian-tube{background:linear-gradient(180deg,#efe7d8,#e6dcc8);border-color:var(--lj-gold)}
+body.lingqian-light .qian-tube:before{border-color:rgba(184,138,63,.38)}
+body.lingqian-light .qian-glyph{color:var(--lj-gold)}
+body.lingqian-light .qian-no{color:var(--lj-cinnabar)}
+body.lingqian-light .qian-level{color:var(--lj-sub);border-color:var(--lj-line)}
+body.lingqian-light .qian-poem{color:var(--lj-ink)}
+body.lingqian-light .qian-jie{color:var(--lj-sub)}
+body.lingqian-light .qian-edict{color:#6b561f}
+body.lingqian-light .verse{color:var(--lj-sub);border-left-color:var(--lj-cinnabar)}
+body.lingqian-light .verse .src{color:var(--lj-gold)}
+body.lingqian-light .disclaimer,body.lingqian-light footer{color:var(--lj-sub)}
+body.lingqian-light a{color:var(--lj-gold)}
+/* 白底下签影字压成墨色，去掉金色光晕，保证清晰可读 */
+body.lingqian-light .qian-shuffle:before{color:var(--lj-ink);text-shadow:none}
+/* 法阵特效 · 白底皮肤：白上加白会糊，故光晕整体压深、加朱砂提层次 */
+body.lingqian-light{
+  --qian-glow:rgba(184,138,63,.38);
+  --qian-aura:rgba(184,138,63,.20);
+  --qian-aura-2:rgba(181,64,47,.06);
+  --qian-rune:#a87c33;
+  --qian-rune-glow:rgba(184,138,63,.30);
+  --qian-mote:#b8893f;
+  --qian-mote-glow:rgba(184,138,63,.42);
+  --qian-ray:#b8893f;
+  --qian-burst-in:rgba(238,206,148,.92);
+  --qian-burst-mid:rgba(181,64,47,.28);
+  --qian-stick-face:linear-gradient(180deg,#fffdf7,#efe4cd);
+  --qian-stick-edge:rgba(33,26,16,.28);
+  --qian-stick-ink:#211a10;
+  --qian-trail:rgba(184,138,63,.85);
+}
+body.lingqian-light .qian-stick{box-shadow:0 4px 14px rgba(33,26,16,.18)}
 .name-notes{margin:6px 0 0}
 .name-notes p{color:var(--muted);font-size:12.5px;line-height:1.85;margin:7px 0}
 .name-notes b{color:var(--gold-soft);font-weight:600;margin-right:4px}
