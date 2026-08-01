@@ -26,6 +26,7 @@ jobs:
           cp index.html dist/
           cp assets/config.js assets/logger.js assets/core.js assets/bazi.js \
              assets/ziwei.js assets/hehun.js assets/nameology.js assets/qian.js \
+             assets/lingqian-anim.js \
              assets/kangxi-strokes.js assets/kangxi-alt.js assets/style.css dist/assets/
           cp modules/*.html dist/modules/
 
