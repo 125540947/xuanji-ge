@@ -35,14 +35,12 @@ jobs:
 
       - name: Configure coscmd
         run: |
-          mkdir -p ~/.coscli
-          cat > ~/.coscli/upload.config <<EOF
+          cat > ~/.cos.conf <<EOF
           [common]
           secret_id = ${{ secrets.COS_SECRET_ID }}
           secret_key = ${{ secrets.COS_SECRET_KEY }}
           region = ap-guangzhou
           bucket = xuanjige-1252634115
-          scheme = https
           EOF
 
       - name: Upload to COS
