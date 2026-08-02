@@ -24,7 +24,7 @@
   --wx-tu:#caa030;   /* 土 黄 */
   --wx-jin:#b8b8b8;  /* 金 白 */
   --wx-shui:#2f6fb0; /* 水 蓝 */
-  /* —— 灵签法阵特效令牌（深色皮肤，白底皮肤在 .lingqian-light 覆盖）—— */
+  /* —— 灵签法阵特效令牌（墨金深色皮肤，gold glow 在墨底观感最佳）—— */
   --qian-glow:rgba(218,178,103,.42);        /* 筒身凝光 */
   --qian-aura:rgba(218,178,103,.22);        /* 地气内圈 */
   --qian-aura-2:rgba(218,178,103,.07);      /* 地气外圈 */
@@ -487,89 +487,7 @@ button:focus-visible,textarea:focus-visible{outline:2px solid var(--gold-soft);
 .ji-bad{color:var(--cinnabar-soft,#b5402f);font-weight:600}
 .ji-mid{color:#d8a24a;font-weight:600}
 
-/* —— 灵签 · 宣纸白主题（lingqian-light）—— */
-body.lingqian-light{
-  --lj-bg:#f6f2ea;
-  --lj-card:#fffdf8;
-  --lj-ink:#211a10;
-  --lj-sub:#6b6155;
-  --lj-gold:#b8893f;
-  --lj-gold-soft:#caa45a;
-  --lj-line:rgba(33,26,16,.20);
-  --lj-cinnabar:#b5402f;
-  background:
-    radial-gradient(900px 500px at 85% -8%,rgba(181,64,47,.05),transparent 60%),
-    radial-gradient(800px 480px at 4% 2%,rgba(184,138,63,.09),transparent 55%),
-    var(--lj-bg);
-  color:var(--lj-ink);
-}
-body.lingqian-light .topbar{
-  background:rgba(246,242,234,.82);
-  border-bottom-color:var(--lj-line);
-}
-body.lingqian-light .brand b{color:var(--lj-ink)}
-body.lingqian-light .brand small{color:var(--lj-sub)}
-body.lingqian-light .brand .seal{color:var(--lj-cinnabar);border-color:var(--lj-cinnabar)}
-body.lingqian-light .nav a{color:var(--lj-sub)}
-body.lingqian-light .nav a:hover{color:var(--lj-gold)}
-body.lingqian-light .hero h1{color:var(--lj-ink);text-shadow:none}
-body.lingqian-light .hero .kicker{color:var(--lj-cinnabar)}
-body.lingqian-light .hero .edict{color:var(--lj-sub);opacity:1}
-body.lingqian-light .hero:before,body.lingqian-light .hero:after{color:var(--lj-gold-soft)}
-body.lingqian-light .btn.gold{color:var(--lj-ink);background:rgba(184,138,63,.10);border-color:var(--lj-gold)}
-body.lingqian-light .btn.gold:hover{background:rgba(184,138,63,.18);color:var(--lj-ink)}
-body.lingqian-light .panel{background:var(--lj-card);border-color:var(--lj-line);box-shadow:0 12px 34px rgba(33,26,16,.07)}
-body.lingqian-light .qian-tube{background:linear-gradient(180deg,#efe7d8,#e6dcc8);border-color:var(--lj-gold)}
-body.lingqian-light .qian-tube:before{border-color:rgba(184,138,63,.38)}
-body.lingqian-light .qian-glyph{color:var(--lj-gold)}
-body.lingqian-light .qian-no{color:var(--lj-cinnabar)}
-body.lingqian-light .qian-level{color:var(--lj-sub);border-color:var(--lj-line)}
-body.lingqian-light .qian-poem{color:var(--lj-ink)}
-body.lingqian-light .qian-jie{color:var(--lj-sub)}
-body.lingqian-light .qian-edict{color:#6b561f}
-body.lingqian-light .verse{color:var(--lj-sub);border-left-color:var(--lj-cinnabar)}
-body.lingqian-light .verse .src{color:var(--lj-gold)}
-body.lingqian-light .disclaimer,body.lingqian-light footer{color:var(--lj-sub)}
-body.lingqian-light a{color:var(--lj-gold)}
-/* 白底下签影字压成墨色，去掉金色光晕，保证清晰可读 */
-body.lingqian-light .qian-shuffle:before{color:var(--lj-ink);text-shadow:none}
-/* 法阵特效 · 白底皮肤：白上加白会糊，故光晕整体压深、加朱砂提层次 */
-body.lingqian-light{
-  --qian-glow:rgba(184,138,63,.32);
-  --qian-aura:rgba(184,138,63,.16);
-  --qian-aura-2:rgba(181,64,47,.05);
-  /* 白底忌金光糊：符文用墨、灵气/放射用朱砂、光爆用暖金，全是清晰线稿 */
-  --qian-rune:#2a2114;
-  --qian-rune-glow:rgba(181,64,47,.42);
-  --qian-mote:#b5402f;
-  --qian-mote-glow:rgba(181,64,47,.55);
-  --qian-ray:#b5402f;
-  --qian-burst-in:rgba(217,164,65,.96);
-  --qian-burst-mid:rgba(181,64,47,.55);
-  --qian-stick-face:linear-gradient(180deg,#fffdf7,#efe4cd);
-  --qian-stick-edge:rgba(33,26,16,.30);
-  --qian-stick-ink:#211a10;
-  --qian-trail:rgba(181,64,47,.80);
-}
-body.lingqian-light .qian-stick{box-shadow:0 4px 14px rgba(33,26,16,.18)}
-/* 白底结构层次：法坛落地、面板成笺、签筒有体积、标题加封 */
-body.lingqian-light .qian-altar::after{
-  content:"";position:absolute;left:50%;bottom:10px;width:118px;height:16px;margin-left:-59px;
-  border-radius:50%;background:radial-gradient(ellipse,rgba(33,26,16,.20),transparent 70%);
-  z-index:0;pointer-events:none;
-}
-body.lingqian-light .panel{
-  border-color:rgba(33,26,16,.20);
-  box-shadow:0 0 0 1px rgba(184,138,63,.22),0 18px 44px rgba(33,26,16,.12);
-}
-body.lingqian-light .qian-tube{
-  background:linear-gradient(180deg,#f3ecdd,#e7ddc9);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 10px 22px rgba(33,26,16,.14);
-}
-body.lingqian-light .hero h1::after{
-  content:"";display:block;width:56px;height:2px;margin:14px auto 0;
-  background:linear-gradient(90deg,transparent,var(--lj-cinnabar),transparent);
-}
+/* 灵签白底主题(lingqian-light)已弃用：灵签页恢复与全站一致的墨金深色，法阵动效在墨底观感最佳 */
 .name-notes{margin:6px 0 0}
 .name-notes p{color:var(--muted);font-size:12.5px;line-height:1.85;margin:7px 0}
 .name-notes b{color:var(--gold-soft);font-weight:600;margin-right:4px}
